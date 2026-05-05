@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vườn Hoa - BloomRead</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="CSS/BloomRead.css">
+    <link rel="stylesheet" href="CSS/garden.css">
+    <script src="JS/components.js"></script>
+
+</head>
+<body>
+    <div id="page-loader">
+        <div class="spinner"></div>
+        <h2 style="color: #16A34A; font-family: 'Inter', sans-serif; font-size: 24px; letter-spacing: 1px;">Đang vào vườn hoa...</h2>
+    </div>
+
+    <app-auth-modals></app-auth-modals>
+
+    <main class="garden-main" id="main-bg">
+        
+        <div class="pot-wrapper" id="pot-wrapper">
+            <div class="seed-hint" id="seed-hint">CHỌN HẠT GIỐNG</div>
+            <img src="Img/BrokenPot.png" id="center-pot" class="center-pot" alt="Chậu cây trung tâm">
+        </div>
+
+        <img src="Img/bag_closed.png" id="bag-icon" class="bagGarden" alt="Túi đồ"
+             onmouseover="if(!document.getElementById('inventory-wrapper').classList.contains('show')) this.src='Img/bag_opened.png'"
+             onmouseout="if(!document.getElementById('inventory-wrapper').classList.contains('show')) this.src='Img/bag_closed.png'">
+
+        <img src="Img/door_closed.png" 
+             onmouseover="this.src='Img/door_opened.png'" 
+             onmouseout="if(!this.classList.contains('locked-open')) this.src='Img/door_closed.png'" 
+             onclick="const p = document.getElementById('prime-wrapper'); const isOpen = p.classList.toggle('show'); this.classList.toggle('locked-open', isOpen); this.src='Img/door_opened.png';"
+             alt="Cánh cửa vườn hoa" class="doorGarden">
+
+        <div class="prime-container" id="prime-wrapper">
+            <img src="Img/prime.png" alt="Prime" class="prime-bg">
+            <div class="prime-menu">
+                <div class="prime-btn" onclick="window.location.href='lib.html'">
+                    <div class="icon-box"><img src="Img/book_icon.png" alt="Icon Thư Viện"></div>
+                    <div class="label-box">THƯ VIỆN</div>
+                </div>
+                <div class="prime-btn" onclick="window.location.href='shop.html'">
+                    <div class="icon-box"><img src="Img/icon shop car.png" alt="Icon Cửa Hàng"></div>
+                    <div class="label-box">CỬA HÀNG</div>
+                </div>
+                <div class="prime-btn" onclick="window.location.href='index.html'">
+                    <div class="icon-box"><img src="Img/home.png" alt="Icon Trang Chủ"></div>
+                    <div class="label-box">TRANG CHỦ</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="inventory-wrapper" id="inventory-wrapper">
+            <div class="inv-header">
+                <h2>BALO CỦA BẠN</h2>
+                <button class="close-inv-btn" id="close-inv-btn">&times;</button>
+            </div>
+            <div class="inv-tabs">
+                <button class="inv-tab active" onclick="switchInvTab('inv-seeds', this)">HẠT GIỐNG</button>
+                <button class="inv-tab" onclick="switchInvTab('inv-pots', this)">CHẬU HOA</button>
+                <button class="inv-tab" onclick="switchInvTab('inv-bgs', this)">HÌNH NỀN</button>
+            </div>
+            <div class="inv-content">
+                <div id="inv-seeds" class="inv-pane active"></div>
+                <div id="inv-pots" class="inv-pane"></div>
+                <div id="inv-bgs" class="inv-pane"></div>
+            </div>
+        </div>
+
+        <button id="cheat-btn" style="position: absolute; top: 10px; right: 10px; z-index: 100; display: none;">GIA TRƯỞNG</button>
+    </main>
+
+    <script type="module" src="JS/main.js"></script>
+    <script type="module" src="JS/garden.js"></script>
+</body>
+</html>

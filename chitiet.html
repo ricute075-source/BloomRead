@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết sách - BloomRead</title>
+    <link rel="stylesheet" href="CSS/BloomRead.css">
+    <link rel="stylesheet" href="CSS/chitiet.css">
+    <script src="JS/components.js"></script>
+</head>
+
+<body>
+    <div id="page-loader">
+        <div class="spinner"></div>
+        <h2>Đang kiếm tìm kiến thức...</h2>
+    </div>
+
+    <app-header></app-header>
+    <app-auth-modals></app-auth-modals>
+
+    <div id="reading-mode-popup" class="mode-modal">
+        <div class="mode-modal-content">
+            <button class="info-btn" id="mode-info-btn">?</button>
+            <div class="info-tooltip" id="mode-info-tooltip">
+                <p style="margin-top:0; margin-bottom:10px;"><strong>Đọc Bình Thường:</strong> Giao diện đầy đủ công cụ, hiển thị mục lục và ảnh nền.</p>
+                <p style="margin:0;"><strong>Focus Mode:</strong> Chế độ tối giản, ẩn mọi chi tiết thừa để bạn tập trung 100% vào trang sách.</p>
+            </div>
+
+            <h2 style="color: #16A34A; margin-top: 5px; margin-bottom: 20px; font-size: 26px;">CHỌN CHẾ ĐỘ</h2>
+            <div class="mode-options">
+                <div class="mode-card" id="mode-normal">
+                    <h3>Đọc Bình Thường</h3>
+                </div>
+                <div class="mode-card" id="mode-focus">
+                    <h3>Focus Mode</h3>
+                </div>
+            </div>
+            <button id="close-mode-popup" class="close-mode-btn">Hủy bỏ</button>
+        </div>
+    </div>
+
+    <main class="main-container">
+        <div class="book-detail-wrapper">
+            <div id="book-cover"></div>
+
+            <div id="book-info">
+                <h1 id="book-title">Đang tải...</h1>
+                <div class="meta-info">
+                    <p id="book-author"></p>
+                    <p id="book-date">Đang cập nhật</p>
+                </div>
+                <p id="book-genre"></p>
+                <div class="desc-box">
+                    <p id="book-desc"></p>
+                </div>
+
+                <div class="action-buttons-wrapper">
+                    <button id="continue-btn">TIẾP TỤC ĐỌC</button>
+                    <button id="read-btn">ĐỌC TỪ ĐẦU</button>
+                    <svg id="fav-btn" class="action-icon" width="35" height="35" viewBox="0 0 24 24" fill="none"
+                        stroke="black" stroke-width="1.5">
+                        <path
+                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">SÁCH TƯƠNG TỰ</div>
+        <div class="similar-books-section">
+            <div id="similar-books-container">
+                <p>Đang tìm sách tương tự...</p>
+            </div>
+            <button class="btn-more">XEM THÊM</button>
+        </div>
+    </main>
+
+    <app-footer></app-footer>
+
+    <script type="module" src="JS/main.js"></script>
+    <script type="module" src="JS/chitiet.js"></script>
+</body>
+
+</html>

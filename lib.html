@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloomRead - Thư Viện</title>
+    <link rel="stylesheet" href="CSS/BloomRead.css">
+    <link rel="stylesheet" href="CSS/lib.css">
+    <script src="JS/components.js"></script>
+</head>
+
+<body>
+    <div id="page-loader">
+        <div class="spinner"></div>
+        <h2 style="color: #16A34A; font-family: 'Inter', sans-serif; font-size: 24px; letter-spacing: 1px;">Đang vào thư viện...</h2>
+    </div>
+    <div id="custom-popup">
+        <div class="popup-box">
+            <div class="popup-msg" id="popup-msg-text"></div>
+            <button class="popup-btn" onclick="closePopup()">Đóng</button>
+        </div>
+    </div>
+    <div id="custom-confirm">
+        <div class="popup-box">
+            <div class="popup-msg" id="confirm-msg-text"></div>
+            <div class="popup-btn-group">
+                <button class="popup-btn popup-btn-cancel" id="btn-confirm-no">Hủy</button>
+                <button class="popup-btn" id="btn-confirm-yes">Đồng ý</button>
+            </div>
+        </div>
+    </div>
+
+    <app-header></app-header>
+    <app-auth-modals></app-auth-modals>
+    
+    <main class="lib-container">
+        <div class="lib-controls">
+            <div class="search-box">
+                <svg width="24" height="24" viewBox="0 0 512 512" fill="#5B5B5B" style="margin-right: 15px;">
+                    <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                </svg>
+                <input type="text" id="search-input" placeholder="Tìm kiếm tên sách, tác giả...">
+            </div>
+            <div class="sort-box" id="sort-btn">
+                <span id="sort-text">Mới nhất</span>
+            </div>
+            <button id="filter-fav-btn" title="Chỉ hiện sách đã thả tim">
+                <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5" id="big-heart-svg">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="lib-book-list" id="library-list"></div>
+
+        <div class="pagination">
+            <button class="page-btn disabled" id="prev-page">◁</button>
+            <div class="page-numbers" id="page-info"><span style="color:#098B23">1</span> / 1 trang</div>
+            <button class="page-btn disabled" id="next-page">▷</button>
+        </div>
+    </main>
+
+    <app-footer></app-footer>
+
+    <script type="module" src="JS/main.js"></script>
+    <script type="module" src="JS/lib.js"></script>
+</body>
+
+</html>
