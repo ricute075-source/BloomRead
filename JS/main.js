@@ -1,5 +1,5 @@
 import { collection, getDocs, doc, getDoc, setDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithRedirect, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { db, auth } from './firebase-config.js';
 
 // 0. HỆ THỐNG POPUP GLOBAL
@@ -440,7 +440,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(btnGoogleLogin) {
         btnGoogleLogin.addEventListener('click', () => {
             const provider = new GoogleAuthProvider();
-            signInWithRedirect(auth, provider)
+            signInWithPopup(auth, provider)
                 .then((result) => {
                     const user = result.user;
                     if (user.email === "ricute069@gmail.com") {
