@@ -231,7 +231,7 @@
             width: 100vw;
             height: 100vh;
             background-color: #B5C6A1;
-            background-image: url('./Img/BackGroundFocus.png');
+            background-image: url('../Img/BackGroundFocus.png');
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
@@ -534,9 +534,9 @@
         }
 
         body.dark-mode #focus-mode-dashboard {
-            background-color: #1a1a1a;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('./Img/BackGroundFocus.png');
-        }
+    background-color: #1a1a1a;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('../Img/BackGroundFocus.png');
+}
 
         body.dark-mode .focus-title {
             color: #e0e0e0;
