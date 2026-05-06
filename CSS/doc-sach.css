@@ -231,7 +231,7 @@
             width: 100vw;
             height: 100vh;
             background-color: #B5C6A1;
-            background-image: url('Img/BackGroundFocus.png');
+            background-image: url('./Img/BackGroundFocus.png');
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
