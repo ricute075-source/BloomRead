@@ -479,3 +479,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 4000);
     }
 });
+
+// Thay vì chỉ chờ window.onload, hãy thêm một khoảng thời gian dự phòng
+window.addEventListener('load', function() {
+    const loader = document.getElementById('page-loader');
+    if (loader) loader.classList.add('hidden-loader');
+});
+
+// THÊM ĐOẠN NÀY: Dù mạng chậm thế nào, sau 1.5 giây bắt buộc phải mở giao diện
+setTimeout(() => {
+    const loader = document.getElementById('page-loader');
+    if (loader && !loader.classList.contains('hidden-loader')) {
+        loader.classList.add('hidden-loader');
+    }
+}, 1500);
