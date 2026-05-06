@@ -525,6 +525,10 @@ window.addEventListener('load', function() {
     const loader = document.getElementById('page-loader');
     if (loader) loader.classList.add('hidden-loader');
 });
+<<<<<<< HEAD
+=======
+
+>>>>>>> a4d02b5b5c58ba4954f22353733b8d8e2e6d351f
 setTimeout(() => {
     const loader = document.getElementById('page-loader');
     if (loader && !loader.classList.contains('hidden-loader')) {
@@ -532,3 +536,6 @@ setTimeout(() => {
     }
 <<<<<<< HEAD
 }, 1500);
+=======
+}, 3500);
+>>>>>>> a4d02b5b5c58ba4954f22353733b8d8e2e6d351f
