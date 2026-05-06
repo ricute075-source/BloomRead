@@ -92,24 +92,24 @@ body {
     z-index: 5;
 }
 
-.seed-hint {
-    background: rgba(255, 255, 255, 0.95);
-    color: #16A34A;
-    padding: 8px 20px;
-    border-radius: 20px;
-    font-size: 16px;
-    margin-bottom: 15px;
-    border: 2px solid #16A34A;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
-    pointer-events: none;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+/* =======================================
+   ANIMATION & TRẠNG THÁI CÂY (TỪ JS CHUYỂN SANG)
+======================================== */
+.pot-wrapper.is-planted:hover .center-pot {
+    transform: none !important;
+    filter: drop-shadow(0 20px 20px rgba(0, 0, 0, 0.5)) !important;
 }
 
-.pot-wrapper:hover .seed-hint {
-    opacity: 1;
-    transform: translateY(0);
+.withered-plant {
+    filter: grayscale(80%) sepia(60%) hue-rotate(-50deg) saturate(150%) drop-shadow(0 20px 20px rgba(0, 0, 0, 0.5)) !important;
+}
+
+.overwatered-plant {
+    filter: hue-rotate(180deg) saturate(200%) drop-shadow(0 20px 20px rgba(0, 0, 0, 0.5)) !important;
+}
+
+.dead-plant {
+    filter: grayscale(100%) brightness(40%) sepia(50%) hue-rotate(300deg) drop-shadow(0 10px 10px rgba(0, 0, 0, 0.8)) !important;
 }
 
 .center-pot {
@@ -127,6 +127,167 @@ body {
 .pot-wrapper:hover .center-pot {
     transform: scale(1.05);
     filter: drop-shadow(0 20px 25px rgba(255, 255, 255, 0.3));
+}
+
+#thanh-container {
+    position: absolute;
+    bottom: 15%;
+    left: 40%;
+    z-index: 45;
+    width: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+#crazy-thanh {
+    width: 100%;
+    object-fit: contain;
+    cursor: pointer;
+    transition: 0.3s;
+    filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
+}
+
+#crazy-thanh:hover {
+    transform: scale(1.05);
+}
+
+#seed-hint {
+    position: relative !important;
+    inset: auto !important;
+    margin-bottom: 15px !important;
+    margin-left: 50px !important;
+    background: white !important;
+    padding: 12px 18px !important;
+    border-radius: 20px !important;
+    border-bottom-left-radius: 0px !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    border: 2px solid #16A34A !important;
+    color: #16A34A !important;
+    z-index: 50 !important;
+    width: max-content !important;
+    max-width: 220px !important;
+    line-height: 1.4 !important;
+    text-align: center;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+#seed-hint::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: -2px;
+    border-width: 15px 15px 0 0;
+    border-style: solid;
+    border-color: inherit;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+}
+
+#seed-hint::before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 1px;
+    border-width: 12px 12px 0 0;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+    z-index: 1;
+}
+
+/* =======================================
+   NÚT CHĂM SÓC CÂY
+======================================== */
+.care-actions {
+    display: none;
+    position: absolute;
+    left: 350px;
+    bottom: 80px;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 50;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.care-actions.show {
+    display: flex;
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+.care-actions::before {
+    content: '';
+    position: absolute;
+    left: -40px;
+    top: 0;
+    width: 40px;
+    height: 100%;
+}
+
+.btn-care {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    border: 3px solid white;
+    background: #fff;
+}
+
+.btn-care img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.btn-care:hover {
+    transform: scale(1.15) rotate(10deg);
+    border-color: #16A34A;
+}
+
+.btn-care:active {
+    transform: scale(0.9);
+}
+
+/* =======================================
+   LOADING MỜ
+======================================== */
+#action-loader {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.6);
+    z-index: 9999999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(2px);
+}
+
+.action-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #ccc;
+    border-top-color: #16A34A;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 }
 
 .garden-hamburger {
@@ -399,12 +560,21 @@ body {
     background: #dc2626;
 }
 
+/* =======================================
+   RESPONSIVE DESIGN CHO CSS
+======================================== */
 @media (max-width: 1024px) {
     .doorGarden {
         width: 250px;
         height: auto;
         bottom: 15px;
         right: 15px;
+    }
+
+    #thanh-container {
+        left: 30%;
+        width: 100px;
+        bottom: 20%;
     }
 
     .bagGarden {
@@ -469,10 +639,28 @@ body {
         margin-bottom: 90px;
     }
 
-    .seed-hint {
-        font-size: 14px;
-        padding: 6px 15px;
-        margin-bottom: 12px;
+    #thanh-container {
+        left: 35%;
+        width: 100px;
+        bottom: 20%;
+    }
+
+    #seed-hint {
+        font-size: 12px !important;
+        max-width: 160px !important;
+        padding: 8px 12px !important;
+        margin-left: 30px !important;
+    }
+
+    .care-actions {
+        left: 260px;
+        bottom: 120px;
+    }
+
+    .btn-care {
+        width: 40px;
+        height: 40px;
+        padding: 6px;
     }
 
     .prime-container {
@@ -546,11 +734,20 @@ body {
         margin-bottom: 120px;
     }
 
-    .seed-hint {
-        font-size: 12px;
-        padding: 5px 12px;
-        margin-bottom: 8px;
-        border-width: 1px;
+    #thanh-container {
+        width: 80px;
+        left: 35%;
+        bottom: 21%;
+    }
+
+    #seed-hint {
+        font-size: 11px !important;
+        max-width: 140px !important;
+    }
+
+    .care-actions {
+        left: 230px;
+        bottom: 140px;
     }
 
     .prime-container {

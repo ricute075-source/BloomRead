@@ -521,27 +521,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-<<<<<<< HEAD
-// ẨN LOADER MÀN HÌNH CHỜ
-=======
-// Thay vì chỉ chờ window.onload, hãy thêm một khoảng thời gian dự phòng
->>>>>>> 5059811819f5831da0872733afda268e64c7778d
 window.addEventListener('load', function() {
     const loader = document.getElementById('page-loader');
     if (loader) loader.classList.add('hidden-loader');
 });
-
-<<<<<<< HEAD
-=======
-// THÊM ĐOẠN NÀY: Dù mạng chậm thế nào, sau 1.5 giây bắt buộc phải mở giao diện
->>>>>>> 5059811819f5831da0872733afda268e64c7778d
 setTimeout(() => {
     const loader = document.getElementById('page-loader');
     if (loader && !loader.classList.contains('hidden-loader')) {
         loader.classList.add('hidden-loader');
     }
-<<<<<<< HEAD
 }, 1500);
-=======
-}, 1500);
->>>>>>> 5059811819f5831da0872733afda268e64c7778d
