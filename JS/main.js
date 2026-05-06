@@ -531,4 +531,4 @@ setTimeout(() => {
     if (loader && !loader.classList.contains('hidden-loader')) {
         loader.classList.add('hidden-loader');
     }
-}, 1500);
+}, 3500);
