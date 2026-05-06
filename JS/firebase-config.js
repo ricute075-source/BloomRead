@@ -19,7 +19,7 @@ if (getApps().length === 0) {
     app = initializeApp(firebaseConfig);
     db = initializeFirestore(app, {
         experimentalForceLongPolling: true,
-        // KÍCH HOẠT CACHE CỤC BỘ: Giúp web load tức thì ở các lần sau
+
         localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
     });
 } else {

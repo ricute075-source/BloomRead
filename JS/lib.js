@@ -1,8 +1,6 @@
         import { collection, getDocs, doc, getDoc, setDoc, query, limit, startAfter } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { db, auth } from './firebase-config.js';
-
-        // --- CÁC HÀM POPUP DÙNG CHUNG ---
         window.showPopup = function(msg) {
             document.getElementById('popup-msg-text').textContent = msg;
             document.getElementById('custom-popup').style.display = 'flex';
@@ -57,11 +55,8 @@ import { db, auth } from './firebase-config.js';
             svgHeart.setAttribute('fill', 'none');
             svgHeart.setAttribute('stroke', 'black');
         }
-
- // --- CHỈ CẦN DÙNG MỘT HÀM NÀY, XÓA BỎ fetchRemainingBooks ---
         async function fetchLibraryData() {
             try {
-                // BƯỚC 1: LẤY DỮ LIỆU TỪ JSON (Siêu tốc - 0.1s)
                 const response = await fetch('Jsol/tac-pham.json');
                 const jsonData = await response.json();
                 allBooks = [...(jsonData.recommended || []), ...(jsonData.featured || []), ...(jsonData.featured_poems || [])];
@@ -70,14 +65,9 @@ import { db, auth } from './firebase-config.js';
                     if (!book.google_id) book.google_id = `book_${index}`;
                     if (!book.year) book.year = 2024 - (index % 10);
                 });
-
-                // Tắt Loader và vẽ giao diện ngay lập tức để user không phải đợi
                 applyFiltersAndRender();
                 const loader = document.getElementById('page-loader');
                 if (loader) loader.classList.add('hidden-loader');
-
-                // BƯỚC 2: CHẠY NGẦM ĐỒNG BỘ LƯỢT ĐỌC TỪ FIREBASE
-                // Đợi 1 giây để màn hình không bị đơ lúc mới vào
                 setTimeout(async () => {
                     try {
                         const snapshot = await getDocs(collection(db, "books"));
@@ -88,19 +78,15 @@ import { db, auth } from './firebase-config.js';
                             const localBook = allBooks.find(b => b.google_id === dbBook.google_id);
 
                             if (localBook) {
-                                // Chỉ cập nhật nếu lượt đọc bị lệch
                                 if ((localBook.completed_reads || 0) !== (dbBook.completed_reads || 0)) {
                                     localBook.completed_reads = dbBook.completed_reads || 0;
                                     needUpdate = true;
                                 }
                             } else {
-                                // Nếu có sách mới hoàn toàn trên Firebase
                                 allBooks.push(dbBook);
                                 needUpdate = true;
                             }
                         });
-
-                        // Cập nhật lại view một cách âm thầm nếu có số liệu mới
                         if (needUpdate) applyFiltersAndRender();
                     } catch (e) {
                         console.log("Lỗi đồng bộ ngầm:", e);

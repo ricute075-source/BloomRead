@@ -226,6 +226,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+
         .btn-more:hover {
             background-color: #16A34A;
             color: white;
@@ -258,56 +259,307 @@
             transition: transform 0.3s ease;
         }
 
-                .mode-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 1000000;
-            display: none; justify-content: center; align-items: center;
+        .mode-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000000;
+            display: none;
+            justify-content: center;
+            align-items: center;
             backdrop-filter: blur(5px);
         }
+
         .mode-modal-content {
-            background: white; padding: 35px 40px; border-radius: 20px;
-            text-align: center; max-width: 500px; width: 90%;
-            animation: popIn 0.3s ease; position: relative;
+            background: white;
+            padding: 35px 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            animation: popIn 0.3s ease;
+            position: relative;
         }
-        .mode-options { 
-            display: flex; gap: 20px; margin: 25px 0; 
+
+        .mode-options {
+            display: flex;
+            gap: 20px;
+            margin: 25px 0;
         }
+
         .mode-card {
-            flex: 1; padding: 25px 15px; border: 2px solid #ddd; border-radius: 15px;
-            cursor: pointer; transition: 0.3s; background: #fff;
-            display: flex; align-items: center; justify-content: center;
+            flex: 1;
+            padding: 25px 15px;
+            border: 2px solid #ddd;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .mode-card:hover { 
-            border-color: #16A34A; background: #f0fdf4; transform: translateY(-5px); 
+
+        .mode-card:hover {
+            border-color: #16A34A;
+            background: #f0fdf4;
+            transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(22, 163, 74, 0.15);
         }
-        .mode-card h3 { color: #16A34A; margin: 0; font-size: 20px; }
-        .close-mode-btn {
-            background: #9CA3AF; color: white; border: none; padding: 10px 40px;
-            border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 16px;
+
+        .mode-card h3 {
+            color: #16A34A;
+            margin: 0;
+            font-size: 20px;
         }
-        .close-mode-btn:hover { background: #6B7280; }
+
+        .close-mode-btn {
+            background: #9CA3AF;
+            color: white;
+            border: none;
+            padding: 10px 40px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 16px;
+        }
+
+        .close-mode-btn:hover {
+            background: #6B7280;
+        }
 
         .info-btn {
-            position: absolute; top: 15px; right: 15px;
-            width: 30px; height: 30px; border-radius: 50%;
-            background: #F3F4F6; color: #4B5563; border: none;
-            font-size: 16px; font-weight: bold; cursor: pointer;
-            transition: 0.2s; display: flex; justify-content: center; align-items: center;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #F3F4F6;
+            color: #4B5563;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .info-btn:hover { background: #E5E7EB; color: #111827; }
-        
+
+        .info-btn:hover {
+            background: #E5E7EB;
+            color: #111827;
+        }
+
         .info-tooltip {
-            position: absolute; top: 55px; right: 15px;
-            background: white; border: 1px solid #ddd; border-radius: 12px;
-            padding: 15px; width: 260px; text-align: left;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            font-size: 14px; color: #444; line-height: 1.6;
-            display: none; z-index: 10;
+            position: absolute;
+            top: 55px;
+            right: 15px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 15px;
+            width: 260px;
+            text-align: left;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            color: #444;
+            line-height: 1.6;
+            display: none;
+            z-index: 10;
         }
-        .info-tooltip.show { display: block; animation: fadeIn 0.2s ease; }
-        .info-tooltip strong { color: #16A34A; }
-        
-        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @media (max-width: 600px) { .mode-options { flex-direction: column; } }
+
+        .info-tooltip.show {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .info-tooltip strong {
+            color: #16A34A;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .mode-options {
+                flex-direction: column;
+            }
+        }
+        @media (max-width: 992px) {
+            .main-container {
+                margin: 30px 20px;
+            }
+
+            .book-detail-wrapper {
+                padding: 30px;
+                gap: 30px;
+            }
+
+            #book-cover {
+                width: 220px;
+            }
+
+            #book-title {
+                font-size: 28px;
+            }
+        }
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 20px 15px;
+            }
+
+            .book-detail-wrapper {
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+                gap: 20px;
+            }
+
+            #book-cover {
+                width: 200px;
+            }
+
+            #book-info {
+                align-items: center;
+                text-align: center;
+            }
+
+            .meta-info {
+                flex-direction: column;
+                gap: 8px;
+                justify-content: center;
+            }
+
+            #book-title {
+                font-size: 24px;
+            }
+
+            #book-author {
+                font-size: 18px;
+            }
+
+            #book-date {
+                font-size: 15px;
+            }
+
+            .desc-box {
+                text-align: left;
+                padding: 15px;
+                width: 100%;
+            }
+
+            .action-buttons-wrapper {
+                justify-content: center;
+                flex-wrap: wrap;
+                width: 100%;
+            }
+
+            #read-btn,
+            #continue-btn {
+                padding: 10px 30px;
+                font-size: 16px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .similar-books-section {
+                padding: 30px 15px;
+            }
+
+            #similar-books-container {
+                gap: 15px;
+            }
+
+            .similar-book-card {
+                width: 130px;
+            }
+
+            .similar-book-card img {
+                height: 185px;
+            }
+        }
+        @media (max-width: 480px) {
+            .main-container {
+                margin: 15px 10px;
+                border-radius: 12px;
+            }
+
+            #book-cover {
+                width: 160px;
+            }
+
+            #book-title {
+                font-size: 22px;
+            }
+
+            .action-buttons-wrapper {
+                gap: 15px;
+            }
+            #read-btn,
+            #continue-btn {
+                width: 100%;
+                padding: 12px;
+                font-size: 16px;
+            }
+
+            #fav-btn {
+                margin: 0 auto;
+            }
+            .similar-book-card {
+                width: calc(50% - 10px);
+            }
+
+            .similar-book-card img {
+                height: auto;
+                aspect-ratio: 2 / 3;
+            }
+            .mode-modal-content {
+                padding: 30px 20px;
+            }
+
+            .mode-options {
+                flex-direction: column;
+                gap: 15px;
+                margin: 15px 0;
+            }
+
+            .mode-card {
+                padding: 15px;
+            }
+
+            .mode-card h3 {
+                font-size: 18px;
+            }
+
+            .info-tooltip {
+                width: 220px;
+                right: 0;
+            }
+        }

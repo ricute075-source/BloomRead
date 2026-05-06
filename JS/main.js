@@ -1,5 +1,5 @@
 import { collection, getDocs, doc, getDoc, setDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, reauthenticateWithCredential, EmailAuthProvider, updatePassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { db, auth } from './firebase-config.js';
 
 // 0. HỆ THỐNG POPUP GLOBAL
@@ -44,8 +44,6 @@ export function renderBooksToHTML(booksArray, containerId) {
     });
 }
 
-// autoSync();
-
 async function autoSync() {
     if (location.hostname !== "localhost" && location.hostname !== "127.0.0.1") return;
     try {
@@ -69,6 +67,7 @@ async function autoSync() {
     } catch (e) { console.error("Sync error:", e); }
 }
 autoSync();
+
 async function loadBooks(user = null) {
     if (!document.getElementById('recommended-container') && !document.getElementById('featured-container')) return; 
     
@@ -87,6 +86,7 @@ async function loadBooks(user = null) {
     
         const onlineEls = document.querySelectorAll('.online-count');
         onlineEls.forEach(el => el.textContent = `Online: ${onlineCount.toLocaleString('vi-VN')}`);
+        
         if (document.getElementById('featured-container')) {
             const featuredContainer = document.getElementById('featured-container');
             let featured = [...allBooks]
@@ -320,18 +320,22 @@ onAuthStateChanged(auth, async (user) => {
 document.addEventListener("DOMContentLoaded", () => {
     const loginModal = document.getElementById('login-modal');
     const registerModal = document.getElementById('register-modal');
+    const changePassModal = document.getElementById('change-password-modal'); 
 
     const btnShowLogin = document.getElementById('btn-show-login');
     const btnShowRegister = document.getElementById('btn-show-register');
     
     const btnCloseLogin = document.querySelector('.close-login-btn');
     const btnCloseRegister = document.querySelector('.close-register-btn');
+    const btnCloseCp = document.getElementById('close-cp-btn');
+    const btnBackCp = document.getElementById('cp-back-btn');
 
     const switchToRegister = document.getElementById('switch-to-register');
     const switchToLogin = document.getElementById('switch-to-login');
 
     const loginForm = document.querySelector('.login-form');
     const registerForm = document.querySelector('.register-form');
+    const cpForm = document.getElementById('cp-form');
     const btnGoogleLogin = document.querySelector('.btn-google-login');
 
     const userNameDisplay = document.getElementById('user-name-display');
@@ -342,14 +346,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnShowRegister) btnShowRegister.addEventListener('click', (e) => { e.preventDefault(); registerModal.style.display = 'flex'; });
     if (switchToRegister) switchToRegister.addEventListener('click', (e) => { e.preventDefault(); loginModal.style.display = 'none'; registerModal.style.display = 'flex'; });
     if (switchToLogin) switchToLogin.addEventListener('click', (e) => { e.preventDefault(); registerModal.style.display = 'none'; loginModal.style.display = 'flex'; });
+    
     if (btnCloseLogin) btnCloseLogin.addEventListener('click', () => loginModal.style.display = 'none');
     if (btnCloseRegister) btnCloseRegister.addEventListener('click', () => registerModal.style.display = 'none');
+    if (btnCloseCp) btnCloseCp.addEventListener('click', () => changePassModal.style.display = 'none');
+    if (btnBackCp) btnBackCp.addEventListener('click', (e) => { e.preventDefault(); changePassModal.style.display = 'none'; });
 
     window.addEventListener('click', (e) => {
         if (loginModal && e.target === loginModal) loginModal.style.display = 'none';
         if (registerModal && e.target === registerModal) registerModal.style.display = 'none';
     });
-
     if(userNameDisplay) {
         userNameDisplay.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -361,7 +367,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-
+    document.addEventListener('click', (e) => {
+        if (e.target && e.target.id === 'btn-open-change-pass') {
+            e.preventDefault();
+            if (changePassModal) changePassModal.style.display = 'flex';
+            if (userMenu) userMenu.style.display = 'none'; 
+        }
+    });
     if(registerForm) {
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -396,6 +408,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    //XỬ LÝ FORM ĐĂNG NHẬP
     if(loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -437,6 +450,33 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    //XỬ LÝ ĐỔI MẬT KHẨU
+    if(cpForm) {
+        cpForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = auth.currentUser;
+            const oldPass = document.getElementById('cp-old-pass').value;
+            const newPass = document.getElementById('cp-new-pass').value;
+            const confirmPass = document.getElementById('cp-confirm-pass').value;
+            if (newPass !== confirmPass) {
+                window.showPopup("Mật khẩu mới không khớp!");
+                return;
+            }
+            try {
+                const credential = EmailAuthProvider.credential(user.email, oldPass);
+                await reauthenticateWithCredential(user, credential);
+                await updatePassword(user, newPass);
+                window.showPopup("Đổi mật khẩu thành công!");
+                changePassModal.style.display = 'none';
+                cpForm.reset();
+            } catch (error) {
+                console.error(error);
+                window.showPopup("Lỗi: Mật khẩu hiện tại không chính xác!");
+            }
+        });
+    }
+
+    //XỬ LÝ ĐĂNG NHẬP GOOGLE
     if(btnGoogleLogin) {
         btnGoogleLogin.addEventListener('click', () => {
             const provider = new GoogleAuthProvider();
@@ -455,6 +495,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // XỬ LÝ ĐĂNG XUẤT
     if(btnLogoutMenu) {
         btnLogoutMenu.addEventListener('click', (e) => {
             e.preventDefault();
@@ -479,3 +520,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 4000);
     }
 });
+
+// ẨN LOADER MÀN HÌNH CHỜ
+window.addEventListener('load', function() {
+    const loader = document.getElementById('page-loader');
+    if (loader) loader.classList.add('hidden-loader');
+});
+
+setTimeout(() => {
+    const loader = document.getElementById('page-loader');
+    if (loader && !loader.classList.contains('hidden-loader')) {
+        loader.classList.add('hidden-loader');
+    }
+}, 1500);

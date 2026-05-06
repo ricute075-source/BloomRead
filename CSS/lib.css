@@ -7,7 +7,6 @@
             min-height: 100vh;
         }
 
-        /* --- POPUP & LOADER UI --- */
         #page-loader {
             position: fixed;
             inset: 0;
@@ -97,7 +96,6 @@
         .popup-btn-cancel { background: #9CA3AF; }
         .popup-btn-cancel:hover { background: #6B7280; }
 
-        /* --- LIB UI --- */
         .lib-container {
             max-width: 1300px;
             width: 100%;
@@ -184,7 +182,6 @@
 
         .lib-book-title {
             font-size: 30px;
-            /* FIX LỖI LẸM DẤU TIẾNG VIỆT IN HOA Ở ĐÂY */
             line-height: 1.4; 
             padding-top: 5px; 
             margin: 0 0 15px 0;

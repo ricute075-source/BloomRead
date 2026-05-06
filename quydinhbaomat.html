@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chính Sách Bảo Mật - BloomRead</title>
+    
+    <!-- Fonts & CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="CSS/BloomRead.css">
+    
+    <!-- Import Web Components -->
+    <script src="JS/components.js"></script>
+    
+    <style>
+        body {
+            background-color: #F4F6F8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .terms-container {
+            max-width: 900px;
+            margin: 60px auto;
+            background: #ffffff;
+            padding: 50px 60px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .terms-title {
+            text-align: center;
+            color: #16A34A;
+            font-size: 36px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        .terms-section {
+            margin-bottom: 30px;
+        }
+
+        .terms-section h2 {
+            color: #2E7D32;
+            font-size: 22px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #E5E7EB;
+            font-weight: 700;
+        }
+
+        .terms-section p {
+            font-size: 16px;
+            color: #4B5563;
+            line-height: 1.7;
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        .terms-section ul {
+            list-style-type: disc;
+            padding-left: 25px;
+            color: #4B5563;
+            margin: 0;
+        }
+
+        .terms-section li {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+
+        .contact-email {
+            font-weight: bold;
+            color: #3B82F6;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-email:hover {
+            color: #1D4ED8;
+            text-decoration: underline;
+        }
+        
+        /* Responsive cho thiết bị di động */
+        @media (max-width: 768px) {
+            .terms-container {
+                margin: 20px 15px;
+                padding: 30px 20px;
+                border-radius: 15px;
+            }
+            .terms-title {
+                font-size: 26px;
+                margin-bottom: 30px;
+            }
+            .terms-section h2 {
+                font-size: 20px;
+            }
+            .terms-section p, .terms-section li {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Load Header & Popup Đăng nhập -->
+    <app-header></app-header>
+    <app-auth-modals></app-auth-modals>
+
+<main class="terms-container">
+    <h1 class="terms-title">CHÍNH SÁCH BẢO MẬT</h1>
+
+    <div class="terms-section">
+        <h2>1. Thu thập dữ liệu toàn diện</h2>
+        <ul>
+            <li><strong>Dữ liệu chủ động:</strong> Chúng tôi thu thập các thông tin bạn cung cấp như Họ tên, Email, Mật khẩu (đã mã hóa), Hình ảnh, Hồ sơ và Lịch sử hoạt động.</li>
+            <li><strong>Dữ liệu tự động:</strong> Khi bạn sử dụng web, hệ thống sẽ tự động ghi nhận địa chỉ IP, loại thiết bị, lịch sử duyệt web, Cookies và thời gian thao tác để tối ưu hóa thuật toán của nền tảng.</li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>2. Quyền sử dụng và Chia sẻ Thông tin</h2>
+        <ul>
+            <li><strong>Mục đích nội bộ:</strong> Phân tích dữ liệu người dùng để đề xuất sách/công việc, nâng cấp tính năng hệ thống và gửi email thông báo.</li>
+            <li><strong>Phát triển thương mại:</strong> Bằng việc sử dụng web, bạn đồng ý rằng BloomRead có quyền chia sẻ dữ liệu ẩn danh (không chứa tên thật hay email lộ liễu) cho các <strong>đối tác chiến lược, nhà tài trợ hoặc mạng lưới quảng cáo</strong> nhằm mục đích thương mại và duy trì hoạt động máy chủ.</li>
+            <li>Cung cấp thông tin cho cơ quan Pháp luật khi có yêu cầu hợp lệ.</li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>3. Giới hạn Trách nhiệm Bảo mật</h2>
+        <ul>
+            <li>Chúng tôi áp dụng các tiêu chuẩn mã hóa (của Firebase/Google) để bảo vệ dữ liệu của bạn. Tuy nhiên, <strong>không có hệ thống nào trên Internet là an toàn 100%</strong>.</li>
+            <li>Trong trường hợp bất khả kháng (bị hacker tấn công, sự cố máy chủ quốc tế), BloomRead <strong>được miễn trừ mọi trách nhiệm pháp lý và nghĩa vụ bồi thường</strong> đối với các rủi ro lộ lọt thông tin người dùng.</li>
+            <li>Người dùng phải tự bảo vệ mật khẩu của mình. Mọi thiệt hại do lộ tài khoản từ phía cá nhân, nền tảng không giải quyết.</li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>4. Lưu trữ dữ liệu</h2>
+        <p>BloomRead bảo lưu quyền lưu trữ dữ liệu của bạn vô thời hạn để phục vụ mục đích sao lưu và phân tích. Ngay cả khi bạn đã yêu cầu xóa tài khoản, một số thông tin ẩn danh hoặc log hệ thống vẫn có thể được giữ lại trong cơ sở dữ liệu của chúng tôi.</p>
+    </div>
+
+    <div class="terms-section">
+        <h2>5. Cập nhật chính sách</h2>
+        <p>BloomRead có toàn quyền sửa đổi, bổ sung chính sách bảo mật này bất cứ lúc nào mà không cần gửi thông báo cá nhân. Việc bạn tiếp tục sử dụng web đồng nghĩa với việc chấp nhận phiên bản chính sách mới nhất.</p>
+    </div>
+
+    <div class="terms-section">
+        <h2>6. Liên hệ hỗ trợ</h2>
+        <p>Mọi thắc mắc về dữ liệu cá nhân, vui lòng liên hệ: <a href="mailto:bloomread@gmail.com" class="contact-email">bloomread@gmail.com</a></p>
+    </div>
+</main>
+
+    <!-- Load Footer -->
+    <app-footer></app-footer>
+
+    <!-- Script xử lý Logic chung toàn hệ thống -->
+    <script type="module" src="JS/main.js"></script>
+
+</body>
+</html>

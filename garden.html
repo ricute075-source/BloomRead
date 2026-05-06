@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="CSS/BloomRead.css">
     <link rel="stylesheet" href="CSS/garden.css">
     <script src="JS/components.js"></script>
-
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="dns-prefetch" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://identitytoolkit.googleapis.com">
 </head>
 <body>
     <div id="page-loader">
@@ -34,6 +36,12 @@
              onmouseout="if(!this.classList.contains('locked-open')) this.src='Img/door_closed.png'" 
              onclick="const p = document.getElementById('prime-wrapper'); const isOpen = p.classList.toggle('show'); this.classList.toggle('locked-open', isOpen); this.src='Img/door_opened.png';"
              alt="Cánh cửa vườn hoa" class="doorGarden">
+
+        <div class="garden-hamburger" onclick="const p = document.getElementById('prime-wrapper'); p.classList.toggle('show'); this.classList.toggle('active');">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
 
         <div class="prime-container" id="prime-wrapper">
             <img src="Img/prime.png" alt="Prime" class="prime-bg">

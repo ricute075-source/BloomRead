@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Điều Khoản Cộng Đồng - BloomRead</title>
+    
+    <!-- Fonts & CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="CSS/BloomRead.css">
+    
+    <!-- Import Web Components (Header, Footer, Modals) -->
+    <script src="JS/components.js"></script>
+    
+    <style>
+        body {
+            background-color: #F4F6F8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .terms-container {
+            max-width: 900px;
+            margin: 60px auto;
+            background: #ffffff;
+            padding: 50px 60px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .terms-title {
+            text-align: center;
+            color: #16A34A;
+            font-size: 36px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        .terms-section {
+            margin-bottom: 30px;
+        }
+
+        .terms-section h2 {
+            color: #2E7D32;
+            font-size: 22px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #E5E7EB;
+            font-weight: 700;
+        }
+
+        .terms-section p {
+            font-size: 16px;
+            color: #4B5563;
+            line-height: 1.7;
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        .terms-section ul {
+            list-style-type: disc;
+            padding-left: 25px;
+            color: #4B5563;
+            margin: 0;
+        }
+
+        .terms-section li {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+
+        .contact-email {
+            font-weight: bold;
+            color: #3B82F6;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-email:hover {
+            color: #1D4ED8;
+            text-decoration: underline;
+        }
+        
+        /* Responsive cho thiết bị di động */
+        @media (max-width: 768px) {
+            .terms-container {
+                margin: 20px 15px;
+                padding: 30px 20px;
+                border-radius: 15px;
+            }
+            .terms-title {
+                font-size: 26px;
+                margin-bottom: 30px;
+            }
+            .terms-section h2 {
+                font-size: 20px;
+            }
+            .terms-section p, .terms-section li {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Load Header & Popup Đăng nhập/Đổi mật khẩu -->
+    <app-header></app-header>
+    <app-auth-modals></app-auth-modals>
+
+<main class="terms-container">
+    <h1 class="terms-title">ĐIỀU KHOẢN DỊCH VỤ</h1>
+
+    <div class="terms-section">
+        <h2>1. Chấp thuận Điều khoản</h2>
+        <p>Bằng việc truy cập, đăng ký tài khoản và sử dụng các dịch vụ của BloomRead, bạn xác nhận đã đọc, hiểu và đồng ý vô điều kiện với toàn bộ các điều khoản này. Nếu không đồng ý, vui lòng ngừng sử dụng dịch vụ ngay lập tức.</p>
+    </div>
+
+    <div class="terms-section">
+        <h2>2. Quyền Kiểm soát của Ban Quản Trị (Admin)</h2>
+        <ul>
+            <li><strong>Quyền sinh sát tài khoản:</strong> BloomRead có toàn quyền từ chối, tạm khóa hoặc xóa vĩnh viễn bất kỳ tài khoản nào vào bất cứ lúc nào, với bất kỳ lý do gì mà <strong>không cần thông báo trước hay bồi thường</strong>.</li>
+            <li><strong>Quyền nội dung:</strong> Chúng tôi có toàn quyền kiểm duyệt, chỉnh sửa, ẩn hoặc xóa bỏ bất kỳ nội dung nào do người dùng đăng tải mà chúng tôi cho là không phù hợp với định hướng của nền tảng.</li>
+            <li><strong>Quyền thay đổi dịch vụ:</strong> BloomRead có thể nâng cấp, thay đổi, thu phí hoặc ngừng cung cấp bất kỳ tính năng nào của trang web mà không phải chịu trách nhiệm pháp lý với người dùng.</li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>3. Miễn trừ trách nhiệm tuyệt đối</h2>
+        <ul>
+            <li><strong>Tính nguyên trạng (As-is):</strong> Nền tảng được cung cấp dưới dạng "có sao dùng vậy". BloomRead không đảm bảo rằng dịch vụ sẽ không bị gián đoạn, không có lỗi, hoặc hoàn toàn miễn nhiễm với hacker/virus.</li>
+            <li><strong>Miễn trừ tranh chấp:</strong> BloomRead chỉ là nền tảng trung gian. Chúng tôi <strong>tuyệt đối không chịu trách nhiệm</strong> cho bất kỳ thiệt hại vật chất, tinh thần, hay các vụ lừa đảo, tranh chấp phát sinh giữa các người dùng với nhau (VD: giao dịch tài chính, mua bán, lừa đảo tuyển dụng/hợp tác).</li>
+            <li><strong>Mất mát dữ liệu:</strong> Người dùng tự chịu rủi ro khi lưu trữ dữ liệu trên hệ thống. Chúng tôi không bồi thường nếu xảy ra sự cố mất mát hồ sơ, bài đăng hay vật phẩm ảo (hoa, coin...).</li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>4. Quyền Sở hữu Trí tuệ và Cấp phép Dữ liệu</h2>
+        <p>Bằng việc đăng tải nội dung (bài viết, bình luận, hồ sơ, hình ảnh) lên BloomRead, bạn tự động cấp cho chúng tôi quyền sử dụng, sao chép, phân phối và hiển thị nội dung đó trên mọi phương tiện truyền thông nhằm mục đích phát triển và quảng bá nền tảng mà <strong>không yêu cầu bất kỳ khoản phí hay sự xin phép nào khác</strong>.</p>
+    </div>
+
+    <div class="terms-section">
+        <h2>5. Trách nhiệm bồi thường của Người dùng</h2>
+        <p>Nếu hành vi sử dụng sai trái, vi phạm pháp luật hoặc vi phạm điều khoản của bạn gây ra thiệt hại, kiện tụng hay tổn thất cho BloomRead, bạn có nghĩa vụ <strong>bồi thường toàn bộ</strong> các chi phí pháp lý, tiền phạt và thiệt hại cho Ban Quản Trị.</p>
+    </div>
+
+    <div class="terms-section">
+        <h2>6. Liên hệ</h2>
+        <p>Email duy nhất tiếp nhận các vấn đề khiếu nại (quyết định cuối cùng luôn thuộc về BloomRead): <a href="mailto:bloomread@gmail.com" class="contact-email">bloomread@gmail.com</a></p>
+    </div>
+</main>
+
+    <!-- Load Footer -->
+    <app-footer></app-footer>
+
+    <!-- Script xử lý Logic chung toàn hệ thống -->
+    <script type="module" src="JS/main.js"></script>
+
+</body>
+</html>

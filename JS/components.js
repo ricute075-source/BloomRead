@@ -1,11 +1,15 @@
-// Header
 class AppHeader extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
             <header class="header">
+                <div class="hamburger" id="hamburger-menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
                 <img src="Img/logoALTF4.png" alt="BloomRead Logo" class="ImgLogo">
                 <h1 class="BloomRead">BLOOMREAD</h1>
-                <nav class="nav-container">
+                <nav class="nav-container" id="nav-menu">
                     <div class="nav-links">
                         <a href="index.html" class="nav-item">Trang Chủ</a>
                         <a href="lib.html" class="nav-item">Thư Viện</a>
@@ -28,9 +32,9 @@ class AppHeader extends HTMLElement {
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
                             </div>
-                            <a href="#" class="menu-item">Đổi mật khẩu</a>
-                            <a href="#" class="menu-item">Chính Sách Bảo Mật</a>
-                            <a href="#" class="menu-item">Điều Khoản Dịch Vụ</a>
+                            <a href="#" class="menu-item" id="btn-open-change-pass">Đổi mật khẩu</a>
+                            <a href="quydinhbaomat.html" class="menu-item">Chính Sách Bảo Mật</a>
+                            <a href="dieukhoan.html" class="menu-item">Điều Khoản Dịch Vụ</a>
                             <div class="menu-divider"></div>
                             <a href="#" class="menu-item menu-logout" id="btn-logout-menu">Đăng xuất</a>
                         </div>
@@ -38,11 +42,19 @@ class AppHeader extends HTMLElement {
                 </nav>
             </header>
         `;
+
+        const hamburger = this.querySelector('#hamburger-menu');
+        const navMenu = this.querySelector('#nav-menu');
+
+        if (hamburger && navMenu) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+        }
     }
 }
 customElements.define('app-header', AppHeader);
-
-//fopoter
 
 class AppFooter extends HTMLElement {
     connectedCallback() {
@@ -113,8 +125,6 @@ class AppFooter extends HTMLElement {
 }
 customElements.define('app-footer', AppFooter);
 
-// UI login
-
 class AppAuthModals extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
@@ -129,7 +139,6 @@ class AppAuthModals extends HTMLElement {
                         <input type="password" id="login-password" placeholder="Mật khẩu" class="login-input" required>
                         <div class="login-options">
                             <label class="remember-me"><input type="checkbox"><span class="checkmark"></span>Ghi nhớ tôi</label>
-                            <a href="#" class="forgot-password">Quên mật khẩu?</a>
                         </div>
                         <button type="submit" class="btn-submit-login">ĐĂNG NHẬP</button>
                         <button type="button" class="btn-google-login">
@@ -142,7 +151,8 @@ class AppAuthModals extends HTMLElement {
                         </button>
                     </form>
                     <div class="login-footer">
-                        <a href="#">Điều khoản</a><a href="#" id="switch-to-register">Đăng ký</a>
+                        <span><a href="dieukhoan.html">Điều khoản</a> và <a href="quydinhbaomat.html">Chính Sách Bảo Mật</a></span>
+                        <a href="#" id="switch-to-register">Đăng ký</a>
                     </div>
                 </div>
             </div>
@@ -158,12 +168,44 @@ class AppAuthModals extends HTMLElement {
                         <input type="password" id="reg-password" placeholder="Mật khẩu" class="login-input" required>
                         <input type="password" id="reg-confirm-password" placeholder="Xác nhận mật khẩu" class="login-input" required>
                         <div class="login-options">
-                            <label class="remember-me"><input type="checkbox" id="reg-terms" required><span class="checkmark"></span>Tôi đồng ý với <a href="#" style="color:#3B82F6"> Điều khoản</a></label>
+                            <label class="remember-me"><input type="checkbox" id="reg-terms" required><span class="checkmark"></span>Tôi đồng ý với <a href="dieukhoan.html" style="color:#3B82F6"> Điều khoản</a> và <a href="quydinhbaomat.html" style="color:#3B82F6"> Chính Sách Bảo Mật</a></label>
                         </div>
                         <button type="submit" class="btn-submit-login">ĐĂNG KÝ</button>
                     </form>
                     <div class="login-footer" style="justify-content: flex-end;">
                         <a href="#" id="switch-to-login">Đăng nhập</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="change-password-modal" class="change-password-overlay">
+                <div class="change-password-content">
+                    <span class="close-login-btn" id="close-cp-btn">&times;</span>
+                    
+                    <div class="cp-user-icon">
+                        <svg viewBox="0 0 24 24" width="60" height="60" stroke="black" stroke-width="1.5" fill="none">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+
+                    <form class="cp-form" id="cp-form">
+                        <div class="cp-input-group">
+                            <input type="password" class="cp-input" id="cp-old-pass" placeholder="Mật khẩu hiện tại" required>
+                        </div>
+                        <div class="cp-input-group">
+                            <input type="password" class="cp-input" id="cp-new-pass" placeholder="Mật khẩu mới" required>
+                        </div>
+                        <div class="cp-input-group">
+                            <input type="password" class="cp-input" id="cp-confirm-pass" placeholder="Nhập lại mật khẩu mới" required>
+                        </div>
+                        
+                        <button type="submit" class="btn-submit-cp">XÁC NHẬN</button>
+                    </form>
+
+                    <div class="cp-footer">
+                        <a href="#">Điều khoản và bảo mật</a>
+                        <a href="#" id="cp-back-btn">Quay lại</a>
                     </div>
                 </div>
             </div>

@@ -8,8 +8,7 @@ const bookId = urlParams.get('id');
 let currentUser = null;
 let favoriteIds = [];
 let savedPageIndex = 0;
-let pendingReadUrl = ""; // Biến lưu URL chờ chuyển trang
-
+let pendingReadUrl = "";
 const favBtn = document.getElementById('fav-btn');
 const readBtn = document.getElementById('read-btn');
 const continueBtn = document.getElementById('continue-btn');
@@ -44,8 +43,6 @@ function updateUI() {
         continueBtn.style.display = "block";
         continueBtn.textContent = `TIẾP TỤC ĐỌC`;
         readBtn.textContent = "ĐỌC LẠI TỪ ĐẦU";
-
-        // GỌI POPUP THAY VÌ CHUYỂN TRANG
         continueBtn.onclick = () => {
             pendingReadUrl = `doc-sach.html?id=${bookId}&page=${savedPageIndex}`;
             document.getElementById('reading-mode-popup').style.display = 'flex';
@@ -94,7 +91,6 @@ async function loadDetail() {
             document.getElementById('book-cover').innerHTML = `<img src="${coverImg}" onerror="this.src='https://placehold.co/300x450/eeeeee/999999?text=No+Cover';">`;
 
             readBtn.style.display = "block";
-            // GỌI POPUP THAY VÌ CHUYỂN TRANG
             readBtn.onclick = () => { 
                 pendingReadUrl = `doc-sach.html?id=${bookId}&page=0`; 
                 document.getElementById('reading-mode-popup').style.display = 'flex';
@@ -143,7 +139,7 @@ document.getElementById('close-mode-popup').onclick = () => {
 };
 
 document.getElementById('mode-info-btn').onclick = (e) => {
-    e.stopPropagation(); // Ngăn chặn sự kiện click lan ra ngoài
+    e.stopPropagation();
     document.getElementById('mode-info-tooltip').classList.toggle('show');
 };
 document.addEventListener('click', (e) => {
@@ -152,14 +148,9 @@ document.addEventListener('click', (e) => {
         tooltip.classList.remove('show');
     }
 });
-
-// ----------------------------------------------------
-// XỬ LÝ SỰ KIỆN NÚT "XEM THÊM" SÁCH TƯƠNG TỰ
 const btnMoreSimilar = document.querySelector('.btn-more');
 if (btnMoreSimilar) {
     btnMoreSimilar.onclick = () => {
-        // Chuyển hướng sang trang Thư viện 
-        // (Bạn có thể đổi 'lib.html' thành link khác nếu muốn)
         window.location.href = 'lib.html'; 
     };
 }

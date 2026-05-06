@@ -119,8 +119,6 @@ function updateGardenVisuals() {
     let currentPotImg = userData.equippedPot || 'Img/BrokenPot.png';
     let currentPlantStageImg = currentPotImg; 
     let currentLabel = "CHỌN HẠT GIỐNG";
-
-    // Khóa Hover nếu đã trồng cây
     if (userData.plantedSeed) {
         potWrapper.classList.add('is-planted');
     } else {
@@ -140,13 +138,12 @@ function updateGardenVisuals() {
         }
         
         currentPlantStageImg = currentStage.img;
-        // Đã xóa hiện phần trăm (%)
         currentLabel = progress >= 100 ? "THU HOẠCH NGAY!" : currentStage.label;
         
         if(plantedSeedImg) plantedSeedImg.classList.remove('show');
     } 
     else if (userData.plantedSeed && currentPotImg !== 'Img/BrokenPot.png') {
-        // Đã xóa hiện phần trăm (%)
+
         currentLabel = userData.plantProgress >= 100 ? "THU HOẠCH NGAY!" : "CHĂM SÓC CÂY";
         if(plantedSeedImg) {
             plantedSeedImg.src = userData.plantedSeed;
@@ -210,7 +207,6 @@ potWrapper.onclick = async () => {
         window.switchInvTab('inv-seeds', document.querySelector('.inv-tab'));
         renderInventoryUI();
     } else {
-        // KIỂM TRA: NẾU ĐẠT 100% THÌ THU HOẠCH
         if (userData.plantProgress >= 100) {
             const isConfirm = await window.showConfirm("Hoa đã nở rộ! Bạn có muốn thu hoạch không?");
             if (isConfirm) {
@@ -239,7 +235,6 @@ potWrapper.onclick = async () => {
                 }
             }
         } else {
-            // Đã xóa chức năng click để tăng %, chỉ hiện thông báo nhẹ nhàng
             if(window.showPopup) window.showPopup("Cây đang trong quá trình phát triển, hãy kiên nhẫn chờ đợi và chăm sóc nhé!");
         }
     }
