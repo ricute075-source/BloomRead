@@ -13,48 +13,257 @@ window.hideActionLoader = () => { document.getElementById('action-loader').style
 const levelUpAudio = new Audio('Audio/chill.mp3');
 levelUpAudio.volume = 0.5;
 
-const THANH_QUOTES = [
-    "Chào cậu hôm nay đọc được mấy trang sách rồi",
-    "Trời đẹp thế này ra vườn đọc sách là nhất đấy",
-    "Cậu có biết cây cũng thích nghe cậu đọc sách không",
-    "Nhớ uống đủ nước như cách cậu tưới cây nhé",
-    "Khu vườn này là của cậu hãy chăm sóc nó thật tốt",
-    "Hôm nay cậu thấy thế nào cười lên cái xem nào",
-    "Mỗi trang sách là một giọt nước tưới mát tâm hồn",
-    "Cậu đang đọc cuốn sách gì thế kể tớ nghe với",
-    "Cố gắng lên thành quả sẽ đến sớm thôi",
-    "Tớ đứng đây cả ngày chỉ để đợi cậu vào thăm đấy",
-    "Đừng thức khuya quá nhé hại sức khỏe lắm",
-    "Cây đang lớn nhanh lắm giống như kiến thức của cậu vậy",
-    "Focus Mode giúp cậu tập trung hơn đấy thử chưa",
-    "Thu hoạch hoa xong nhớ khoe với mọi người nhé",
-    "Cậu là người chăm chỉ nhất mà tớ từng biết",
-    "Sách hay cũng như phân bón tốt giúp ta lớn khôn",
-    "Đừng quên nghỉ ngơi sau những giờ học căng thẳng",
-    "Tớ tuy hơi crazy nhưng tớ rất thích đọc sách",
-    "Gieo một hạt mầm gặt một rừng hoa",
-    "Tớ cá là cây này nở ra sẽ đẹp lắm đây",
-    "Nếu mệt mỏi hãy nhắm mắt lại và nghe tiếng chim hót",
-    "Cậu ơi có con sâu nào lảng vảng ở đây không",
-    "Tớ đứng gác vườn cho cậu rồi yên tâm đi học đi",
-    "Kỷ luật làm nên sự tự do cậu làm tốt lắm",
-    "Đọc sách không chỉ để biết mà còn để hiểu",
-    "Cậu có thấy tớ đẹp trai không hì hì",
-    "Chăm cây cũng như chăm sóc chính bản thân mình vậy",
-    "Thấy tớ đứng đây có ngầu không",
-    "BloomRead tự hào vì có một người dùng như cậu",
-    "Trồng cây khó một giữ cây sống khó mười",
-    "Một ngày không đọc sách là một ngày lãng phí",
-    "Cậu có muốn uống trà cùng tớ không",
-    "Hãy để những muộn phiền tan biến theo gió",
-    "Hôm nay cậu làm rất tốt tớ ghi nhận điều đó",
-    "Kiến thức là hạt giống hành động là nước tưới",
-    "Vườn hoa này sẽ sớm rực rỡ sắc màu thôi",
-    "Đừng bỏ cuộc khi gặp khó khăn nhé tớ luôn ở đây",
-    "Tớ thích nhìn cậu lúc tập trung đọc sách",
-    "Hôm nay trời xanh mây trắng rất hợp để trồng cây",
-    "Chạm vào tớ thêm lần nữa xem tớ nói gì nào"
-];
+const DIALOGUES = {
+    thanh: {
+        default: [
+            "Waby wabo! Cậu có thấy cái chảo của tớ đâu không?", "Baaaaaaaow! Cây khát nước rồi, hoặc có thể nó thèm bánh mì thịt!",
+            "Tớ vừa ăn một quyển sách... à nhầm, đọc một cái bánh Taco!", "Raaaawr! Gieo hạt đi, tớ đang giữ khu vườn an toàn khỏi bọn thây ma vô hình!",
+            "Hôm nay trời đẹp để đội chảo lên đầu ra vườn đọc sách đấy!", "Cậu có phân bón không? Tớ định dùng nó làm sốt cà chua!",
+            "Rooby rooby roo! Đọc xong trang này cậu mua cho tớ cái Taco nhé?", "Tại sao tớ lại đứng đây? BỞI VÌ TỚ ĐIÊN RỒOOOO!",
+            "Cây của cậu đang lớn, giống như cách tóc tớ mọc trong cái chảo này vậy!", "Tưới nước cho nó đi, đừng tưới lên đầu tớ!",
+            "Focus Mode à? Có bằng chế độ Taco-Mode của tớ không?", "Này! Có con kiến đang tính ăn trộm kiến thức của cậu kìa!",
+            "Sách hay đấy! Có đoạn nào dạy làm sốt Mayonnaise không?", "Grraargh! Thu hoạch hoa nhanh lên trước khi tớ ăn mất nó!",
+            "Tớ bán mọi thứ từ xe cũ đến phân bón... nhưng kiến thức thì cậu phải tự cày!", "Bluh bluh bluh! Đọc sách nhiều vào, não to ra thì đội chảo mới chật!",
+            "Cây đang lớn! Cây đang lớn! Giống như cái bụng của tớ sau khi ăn phở!", "Một ngày không đọc sách là một ngày không có Taco!",
+            "Tớ cá 10 cái chảo là cây này nở ra sẽ đẹp lắm đây!", "Xin chào! Tớ là Thành. Nhưng mọi người thường gọi tớ là... CRAZY THÀNH!"
+        ],
+        b1: [
+            "Trời sáng rồi! Mang chảo ra phơi nắng thôi!", "Oa, nắng sớm làm Taco của tớ giòn hơn đấy!",
+            "Cây đang tập thể dục buổi sáng kìa, Wabo!", "Nắng chiếu lung linh muôn hoa vàng... và cái chảo của tớ!",
+            "Bình minh là lúc zombie lười nhất, an toàn rồi!", "Mặt trời to quá, trông như một cái bánh Crepe khổng lồ!",
+            "Dậy đọc sách thôi! Chim đang hót 'Waby Wabo' kìa!", "Nắng làm tớ hắt xì! Át chù! Rớt luôn cái chảo!",
+            "Cậu có thấy giọt sương không? Tớ vừa nếm thử, vị lạt nhách!", "Buổi sáng ở đây trong lành quá, tớ muốn ăn sáng 3 lần!",
+            "Hoa hướng dương thích nắng, tớ thì thích ngủ nướng... khò khò.", "Dậy sớm để thành công! Hoặc để ăn được nhiều Taco hơn!",
+            "Ánh sáng ban mai làm nụ hoa nở nhanh hơn đó!", "Tớ định nấu trứng ốp la bằng ánh nắng này, chảo sẵn sàng rồi!",
+            "Trời xanh, mây trắng, nắng vàng, và tớ... điên rồ!", "Đọc sách buổi sáng giúp não cậu to như cái chậu này vậy!",
+            "Wabo! Gió mát quá, thổi bay mất cả suy nghĩ của tớ rồi!", "Tưới nước buổi sáng là chuẩn bài nhất đấy!",
+            "Mặt trời chào cậu kìa, chào lại đi: Baaaaow!", "Không khí này làm tớ muốn múa điệu Zombie vỡ lòng!"
+        ],
+        b2: [
+            "Tối thui! Cậu có mang theo đuốc không?", "Suỵt! Đêm nay tớ nghe thấy tiếng sột soạt... chắc là zombie!",
+            "Khu rừng này rùng rợn quá, tớ trốn vào chảo đây!", "Cây có ngủ không nhỉ? Hay nó thức để đọc sách cùng cậu?",
+            "Wabo... đom đóm bay quanh chậu kìa, tớ tưởng là đạn súng la-de!", "Trăng sáng quá, giống hệt một chiếc đĩa ném!",
+            "Đêm huyền bí, tớ định nấu súp bí ẩn bằng phân bón và nước mương!", "Đừng đọc truyện ma ở đây nhé, tớ sợ tè ra quần mất!",
+            "Cây ban đêm thở ra CO2, tớ thở ra tiếng ngáy khò khò...", "Bóng tối thế này thì bọn thây ma sẽ không thấy tớ đâu!",
+            "Rừng đêm yên tĩnh quá, tớ phải hét lên cho vui: WABO!", "Ngôi sao trên kia có rơi xuống thành hạt giống không nhỉ?",
+            "Lạnh quá! Cho tớ mượn áo khoác, hoặc cái lò sưởi đi!", "Ban đêm thì hoa nở kiểu gì? Nở lén à?",
+            "Nếu có ma, tớ sẽ dùng chảo đập nó một trận!", "Chậu cây ban đêm trông như cái hũ vàng phát sáng!",
+            "Tớ vừa thấy một cái bóng! Ồ, là bóng của tớ.", "Thức khuya hại sức khỏe, nhưng vì cậu nên tớ sẽ thức gác vườn!",
+            "Gió rít ghê quá! Raaaawr! Tớ rít lại luôn cho sợ!", "Khò... khò... tớ đang gác... khò..."
+        ],
+        b3: [
+            "Oaaaa! Chó bự kìa! Tớ cỡi lên lưng nó được không?", "Bé sói này có thích ăn thịt nướng không nhỉ?",
+            "Nó đang nhìn tớ kìa... Đừng cắn chảo của tớ nhé!", "Wabo! Tớ và sói sẽ hợp tác bảo vệ khu vườn!",
+            "Con sói này ngầu quá, tớ vuốt lông nó nhé? AAAA nó gầm!", "Này Sói, mày có biết sủa 'Waby wabo' không?",
+            "Sói và Crazy Thành! Cặp bài trùng vô địch vũ trụ!", "Mắt nó đỏ kìa, tớ lấy kính râm đeo cho nó nha?",
+            "Nó thở ra khói hay tớ đang hoa mắt thế?", "Tớ cá là bé sói này cũng thích đọc tiểu thuyết ngôn tình!",
+            "Gâu! Gâu! Tớ đang giao tiếp với nó bằng tiếng Sói!", "Con sói này bảo vệ vườn tốt hơn chảo của tớ đấy!",
+            "Đừng để sói đói nhé, không nó ăn mất cây của cậu đấy!", "Nếu zombie tới, tớ sẽ chỉ tay bảo: 'Sói, cắn nó!'",
+            "Bộ lông này mượt thật, làm chăn đắp mùa đông thì tuyệt!", "Sói ơi! Đi mua giùm anh cái bánh mì Taco!",
+            "Cậu chủ của con sói này chắc phải ngầu lắm!", "Tớ đang dạy sói tưới cây, nhưng nó lại đi vệ sinh vào chậu...",
+            "Nó cứ chằm chằm vào cái chảo của tớ. Không ăn được đâu!", "Sói cô độc gặp Thành điên rồ... hết cô độc luôn!"
+        ]
+    },
+    quan: {
+        default: [
+            "Thật thảm hại. Ngươi nghĩ vài trang sách có thể đọ lại bộ óc vĩ đại của ta sao?", "Cái cây xơ xác của ngươi làm ta chướng mắt. Tưới nước đi!",
+            "Ta đã tính toán được tỷ lệ héo úa... 100% nếu ngươi lười biếng!", "Ngươi gọi đây là 'vườn' sao? Ta gọi đây là 'phòng thí nghiệm thất bại'.",
+            "Bón phân đi. Dù nó không giúp IQ của ngươi tăng lên.", "Ta, Tiến sĩ Minh Quân vĩ đại, đang phí phạm thời gian nhìn ngươi trồng trọt.",
+            "Trí thông minh của ngươi bằng đúng số lá trên cái cây này. Tròn trĩnh số 0.", "Cố gắng đọc sách đi, để thu hẹp khoảng cách vô cực giữa ta và ngươi.",
+            "Ngươi định để nó chết khát sao? Một chiến lược thật tồi tệ.", "Cái chậu của ngươi thiếu tính logic. Thật nhàm chán.",
+            "BloomRead? Ta có thể lập trình ra ứng dụng này trong lúc nhắm mắt.", "Tưới quá tay rồi kìa! Não ngươi không chứa nổi khái niệm 'vừa đủ' sao?",
+            "Thu hoạch hoa đi, để ta xem thành quả thảm hại của ngươi.", "Sách của ngươi toàn kiến thức tầm thường.",
+            "Khu vườn này đang làm ô nhiễm tầm nhìn vĩ đại của ta.", "Cây cần H2O. Đó là Nước đấy, giải thích cho kẻ kém cỏi hiểu.",
+            "Tên Crazy Thành là đồ ngốc, ngươi còn tệ hơn khi để cây héo.", "Bón phân vào! Thuật toán nói nó đang thiếu Nitơ trầm trọng.",
+            "Chỉ kẻ não phẳng mới không biết dùng Focus Mode.", "Ghi nhớ tên ta: Tiến Sĩ Minh Quân! Kẻ thống trị khu vườn này."
+        ],
+        b1: [
+            "Ánh sáng ban mai hoàn hảo. Phổ quang phổ ở mức tối ưu để quang hợp.", "UV index đang tăng. Ngươi có định che chắn cho thí nghiệm không?",
+            "Nhiệt độ buổi sáng phù hợp để các enzym trong lá hoạt động.", "Khu vườn ban mai à? Một cái tên sến súa thiếu tính khoa học.",
+            "Ánh sáng chói lóa này đang cản trở tầm nhìn màn hình vi tính của ta.", "Ta đã thức trắng đêm để làm việc, và ánh mặt trời này thật chướng mắt.",
+            "Sự ngưng tụ của nước trên lá - hiện tượng vật lý cơ bản, không có gì lạ.", "Nhanh lên, tận dụng tối đa chu trình Calvin khi còn có ánh sáng.",
+            "Tiếng chim ồn ào. Ta nên chế tạo một cỗ máy tạo sóng siêu âm để đuổi chúng.", "Bình minh chỉ là ảo ảnh quang học do sự tự quay của Trái Đất.",
+            "Quang hợp đang diễn ra với tốc độ 2.3 micromol CO2 mỗi giây.", "Ngươi đứng ngây ra đó ngắm cảnh à? Trí tuệ không tự sinh ra đâu!",
+            "Ánh nắng làm lộ rõ sự yếu ớt của cái cây thí nghiệm này.", "Ta không cần phơi nắng. Bức xạ mặt trời có hại cho tế bào da thiên tài.",
+            "Đừng để đất bốc hơi hết H2O. Sự bốc thoát hơi nước đang tăng cao.", "Một buổi sáng hoàn hảo để ta chứng minh định lý mới.",
+            "Nắng ấm? Cảm xúc con người thật thừa thãi và phi logic.", "Ta có thể tính được góc chiếu của mặt trời là bao nhiêu độ lúc này.",
+            "Không khí trong lành không làm não ngươi thông minh lên được đâu.", "Tiếp tục đọc sách đi, đừng để ánh sáng làm phân tâm bộ não nhỏ bé đó."
+        ],
+        b2: [
+            "Bóng tối. Không có ánh sáng, pha tối của quang hợp sẽ sớm dừng lại.", "Nhiệt độ giảm. Tốc độ chuyển hóa trong thực vật đang chậm đi.",
+            "Tại sao ngươi lại chọn không gian phi logic này để trồng cây?", "Bóng tối cản trở việc quan sát số liệu. Ta cần bật đèn pha 10.000 lumen.",
+            "Rừng đêm huyền bí? Nghe như một tựa game rẻ tiền thiếu thực tế.", "Những âm thanh này... sinh vật sống về đêm đang hoạt động quanh đây.",
+            "Không có quang hợp tự nhiên, ta đề xuất dùng đèn LED phổ nhân tạo.", "Đêm là lúc ta hoạt động hiệu suất 200%. Ngươi thì đang ngáp dài.",
+            "Sự sụt giảm lượng ánh sáng ảnh hưởng nghiêm trọng đến chu kỳ sinh học.", "Đừng để nỗi sợ hãi nguyên thủy bóng tối chi phối não bộ ngươi.",
+            "Nếu ngươi sợ ma, ta có thể chứng minh chúng không tồn tại bằng toán học.", "Môi trường thiếu sáng. Phân bón lúc này là giải pháp bù đắp duy nhất.",
+            "Thực vật đang hô hấp. Nó đang cướp O2 của ta. Đáng giận!", "Bóng đêm này làm ta nhớ đến không gian vô định của vũ trụ... cũng tầm thường.",
+            "Sương đêm đang bổ sung một lượng độ ẩm siêu vi cho chất nền.", "Đừng lấy cớ buồn ngủ để trốn tránh việc đọc sách.",
+            "Màn đêm đen như tương lai học thuật của ngươi vậy.", "Rừng khuya, nhiệt độ sụt giảm, ngươi nên mặc thêm áo nếu không muốn ốm.",
+            "Sự tĩnh lặng này khá tốt để tập trung... nếu ngươi không cứ thở mạnh thế.", "Dữ liệu ban đêm đã được ta thu thập xong. Thí nghiệm tiếp tục."
+        ],
+        b3: [
+            "Một cá thể Canis lupus? Ai cho phép mang dã thú vào phòng thí nghiệm?", "Hệ thống thần kinh của con vật này có vẻ phản ứng bất thường với ta.",
+            "Đừng để con sói đó cắn nát mẫu vật thực vật của ta!", "Ta có thể tính toán lực cắn của nó: đủ để nghiền nát xương ngươi đấy.",
+            "Bức xạ năng lượng quanh con sói này không hợp lý. Đột biến gen chăng?", "Một con sói cô độc. Bầy đàn là sự yếu đuối, nó hiểu được điều đó.",
+            "Mang nó ra xa khỏi ta! Lông chó sói làm giảm độ vô trùng của áo blouse!", "Minh Quyền và con sói này... đều mang một sự phi logic khó chịu.",
+            "Ánh mắt của dã thú. Nó đang phân tích điểm yếu của ta ư? Hoang tưởng!", "Ta đang tự hỏi nếu cấy ghép chip vào não con sói này thì sao...",
+            "Nó không sủa. Ít ra nó biết giữ im lặng khi thiên tài đang suy nghĩ.", "Sự tồn tại của sinh vật này nằm ngoài phương trình sinh thái thông thường.",
+            "Nó đang bảo vệ ngươi sao? Thật nực cười. Một cái máy quét tia laser sẽ tốt hơn.", "Con sói này có vẻ thích cái chậu. Thật thiếu tính thẩm mỹ.",
+            "Quan sát sự di chuyển của nó... cơ bắp hoàn hảo, nhưng trí não vẫn là cầm thú.", "Đừng tưởng có sói bảo vệ thì ngươi không cần làm bài tập!",
+            "Nếu nó dám gầm vào mặt ta, ta sẽ biến nó thành thí nghiệm tĩnh điện.", "Môi trường có dã thú làm tăng hormone cortisol, giúp ngươi tỉnh táo hơn đấy.",
+            "Ta không sợ chó. Ta chỉ không thích sự giao tiếp vô nghĩa với sinh vật bậc thấp.", "Sói của Minh Quyền? Một sản phẩm thiết kế lai tạp sự cường điệu."
+        ]
+    },
+    quyen: {
+        default: [
+            "...", "Sự tĩnh lặng là một món quà. Đừng phá vỡ nó.", "Ta chuộng bóng tối hơn những lời sáo rỗng.", 
+            "Gieo hạt đi. Một mầm sống cô độc bắt đầu.", "Tưới nước. Chăm sóc sự sống không cần phải ồn ào.",
+            "Mỗi cuốn sách là một thế giới cô lập. Ta thích chìm vào đó.", "Chậu cây này... đường nét thiết kế khá tạm bợ.",
+            "Ngươi ồn ào quá. Tập trung đi.", "Ta không cần ai hiểu. Chỉ cần cây tiếp tục sống.",
+            "Hãy để thời gian làm việc của nó. Đừng ép buộc.", "Phân bón... nuôi dưỡng từ những thứ mục nát.",
+            "Hoa nở hay tàn, cuối cùng cũng trở về với đất.", "Không cần ánh hào quang. Ta hoạt động tốt nhất trong bóng râm.",
+            "Sự sống thật mong manh... giống như những bản nháp thiết kế bị vứt bỏ.", "Hãy đọc trong yên lặng. Trí tuệ sinh ra từ sự cô độc.",
+            "Thế giới quá nhiều tạp âm. BloomRead là nơi ta tìm thấy sự phẳng lặng.", "Cây đang lớn. Chậm rãi và không phô trương.",
+            "Kẻ mạnh nhất là kẻ chịu đựng được sự cô đơn.", "Đừng hỏi ta tại sao lại đứng đây. Ta thích thế.",
+            "Ta là Minh Quyền. Mọi thứ chỉ cần hoàn hảo trong tĩnh lặng."
+        ],
+        b1: [
+            "Ban mai... quá nhiều ánh sáng. Nó làm ta nhức mắt.", "Tiếng ồn của buổi sáng phá hỏng thiết kế tĩnh lặng của ta.",
+            "Ánh mặt trời gay gắt. Ta muốn trở về với bóng râm.", "Mọi thứ bị phơi bày dưới ánh sáng này. Không có chỗ cho sự bí ẩn.",
+            "Chim hót, gió thổi. Một bản giao hưởng hỗn loạn.", "Ta không thuộc về khung cảnh rực rỡ này.",
+            "Che bớt nắng lại. Tác phẩm của ta cần độ tương phản trầm hơn.", "Khung cảnh này quá sặc sỡ. Nó làm lu mờ chủ thể.",
+            "Ban mai là sự bắt đầu ồn ào mà ta buộc phải chấp nhận.", "Nắng vàng trên lá xanh. Bố cục màu sắc cơ bản... hơi nhàm chán.",
+            "Ta thà vẽ một bầu trời xám xịt còn hơn sự tươi tắn giả tạo này.", "Ánh sáng chói lóa không che giấu được sự thật trống rỗng.",
+            "Tưới nước nhanh đi để ta tìm chỗ trú nắng.", "Chậu cây trông thật lạc lõng giữa ánh sáng rực rỡ này.",
+            "Bình minh nhắc nhở ta rằng một ngày mệt mỏi lại bắt đầu.", "Ta ghét sự nhiệt tình của buổi sáng.",
+            "Đừng bắt ta phải mỉm cười với mặt trời. Không bao giờ.", "Nhiệt độ đang tăng. Cảm giác khó chịu lan tỏa.",
+            "Khung cảnh này thiếu đi chiều sâu của bóng tối.", "Hãy để ta yên dưới tán cây này. Khỏi ánh sáng mặt trời."
+        ],
+        b2: [
+            "Rừng đêm... Nơi ta thuộc về.", "Bóng tối bao trùm. Mọi đường nét đều trở nên tinh tế.",
+            "Sự tĩnh mịch tuyệt đối. Đây mới là cảm hứng thiết kế của ta.", "Dưới ánh trăng, chậu cây trông như một kiệt tác cô độc.",
+            "Bóng đêm giấu đi những khuyết điểm của trần thế.", "Không có tạp âm. Chỉ có tiếng thở của màn đêm.",
+            "Màu đen không phải là u ám. Nó là sự bao dung vô tận.", "Ta có thể đứng đây hàng giờ mà không cảm thấy phiền phức.",
+            "Rừng khuya lạnh lẽo. Nhưng nó chân thật hơn ban ngày.", "Ánh sáng yếu ớt của cây là điểm nhấn hoàn hảo cho canvas này.",
+            "Hãy cứ đọc sách trong tĩnh lặng. Đêm sẽ bảo vệ ngươi.", "Sự huyền bí của bóng tối kích thích tư duy nghệ thuật.",
+            "Ta yêu sự đơn sắc của cảnh vật lúc này.", "Khu rừng này chia sẻ sự cô độc cùng ta.",
+            "Chỉ những kẻ mạnh mẽ mới dám đối diện với bóng tối.", "Những chiếc lá chìm trong bóng râm... một vẻ đẹp u uất.",
+            "Đừng bật đèn. Ngươi sẽ phá hỏng kiệt tác không gian này.", "Gió đêm thổi qua. Ta nghe thấy tiếng gọi của sự hư vô.",
+            "Không cần phô trương. Đêm tối tự thân nó đã là quyền lực.", "Chăm sóc cây đi. Đêm nay sẽ dài đấy."
+        ],
+        b3: [
+            "Bạn của ta. Chúng ta thuộc về nhau.", "Con sói này hiểu sự tĩnh lặng tốt hơn bất kỳ con người nào.",
+            "Bộ lông trắng, lửa đỏ, bóng đêm. Phối màu hoàn hảo do ta tạo ra.", "Sói cô độc... Ta tìm thấy hình bóng mình trong nó.",
+            "Đừng sợ nó. Nó chỉ cắn những kẻ đạo đức giả.", "Sự hiện diện của nó mang lại cho ta cảm giác an toàn câm lặng.",
+            "Sói không cần bầy đàn để chứng minh sức mạnh.", "Ngươi thấy ngọn lửa trên lưng nó chứ? Đó là ngọn lửa của sự kiêu hãnh.",
+            "Nó đang gác đêm. Ngươi cứ việc đọc sách đi.", "Ánh mắt nó sắc bén, nhìn thấu những điều giả dối.",
+            "Đừng vuốt ve nó. Sự tôn trọng bắt đầu từ việc giữ khoảng cách.", "Chậu cây và con sói. Một sự kết hợp dị biệt nhưng hài hòa.",
+            "Ta thiết kế ra nó bằng tất cả tâm hồn đơn độc của mình.", "Nghe tiếng thở của nó xem. Nhịp điệu của vùng hoang dã.",
+            "Nó không thích sự ồn ào của tên Thành, hay sự ngạo mạn của tên Quân.", "Chỉ cần ta và sói ở đây, không ai có thể làm phiền khu vườn này.",
+            "Đừng để nó đói. Dù nó có thể nhịn, nhưng ta không thích.", "Vẻ đẹp của nó là vẻ đẹp của sự nguy hiểm bị kìm nén.",
+            "Nó đi bên ta như một cái bóng rực lửa.", "Ngươi có vinh hạnh lớn khi được chiêm ngưỡng tác phẩm sống này đấy."
+        ]
+    }
+};
+
+const DRAMATIC_DEATH_MESSAGES = {
+    quan: {
+        overwatered: "THẢM HẠI! Tiêu chuẩn 'chăm sóc' của ngươi thật sỉ nhục trí tuệ. Ngươi vừa dìm chết một sinh vật bất động đấy, đồ kém cỏi."
+    },
+    quyen: {
+        overwatered: "Tàn lụi trong sự ngột ngạt. Ngươi đã nhấn chìm hy vọng cuối cùng của nó."
+    },
+    thanh: {
+        overwatered: "Raaaawr! Cây khát NƯỚC! Chứ không cần một cái Taco-Tsunami hương vị ngập úng! Nhìn nó xem, nó sũng nước rồi! Wabo!"
+    }
+};
+
+const ITEM_DB = {
+    's1': { name: 'Hoa hướng dương', img: 'Img/SunFlower/Seed.png', type: 'seed' },
+    'p1': { name: 'Chậu Thường', img: 'Img/NormalPot.png', type: 'pot' },
+    'p2': { name: 'Chậu Vàng', img: 'Img/GoldenPot.png', type: 'pot' },
+    'p3': { name: 'Chậu Của Coder', img: 'Img/CoderPot.png', type: 'pot' },
+    'b1': { name: 'Khu vườn ban mai', img: 'Img/KhuVuonBanMai.jpg', type: 'bg' }, 
+    'b2': { name: 'Rừng đêm huyền bí', img: 'Img/Rung_Dem_Huyen_Bi.png', type: 'bg' }, 
+    'b3': { name: 'Sói của Minh Quyền', img: 'Img/SoiCuaMinhQuyen.png', type: 'bg' }, 
+    'w1': { name: 'Bình Nước', img: 'Img/nuoc.png', type: 'tool' },
+    'f1': { name: 'Phân Bón', img: 'Img/phanbon.png', type: 'tool' },
+    'c1': { name: 'Dr.Minh Quân', img: 'Img/DrMinhQuan.png', type: 'character' },
+    'c2': { name: 'Quyền Cô Độc', img: 'Img/MinhQuyen.png', type: 'character' } 
+};
+
+function getCharacterQuote(charType, bgImg) {
+    let bgKey = 'default';
+    if (bgImg === 'Img/KhuVuonBanMai.jpg') bgKey = 'b1';
+    else if (bgImg === 'Img/Rung_Dem_Huyen_Bi.png') bgKey = 'b2';
+    else if (bgImg === 'Img/SoiCuaMinhQuyen.png') bgKey = 'b3';
+
+    const quotes = DIALOGUES[charType][bgKey] || DIALOGUES[charType]['default'];
+    return quotes[Math.floor(Math.random() * quotes.length)];
+}
+
+function getCurrentCharType() {
+    if (userData.equippedChar === 'c1') return 'quan';
+    if (userData.equippedChar === 'c2') return 'quyen';
+    return 'thanh';
+}
+
+function triggerDramaticDeath(cause) {
+    const charType = getCurrentCharType();
+    const message = DRAMATIC_DEATH_MESSAGES[charType][cause];
+    const deathOverlay = document.getElementById('dramatic-death-overlay');
+    const deathMessageText = document.getElementById('death-message-text');
+
+    if (deathMessageText) {
+        deathMessageText.textContent = message;
+    }
+    if (deathOverlay) {
+        deathOverlay.classList.add('show');
+    }
+    setTimeout(() => {
+        if (deathOverlay) {
+            deathOverlay.classList.remove('show');
+        }
+        updateGardenVisuals();
+    }, 5000);
+}
+
+let currentUser = null;
+let userData = {};
+const FORTY_EIGHT_HOURS = 48 * 60 * 60 * 1000;
+const MAX_WATER = 16;
+const MAX_FERTILIZER = 3;
+
+const PLANT_STAGES_CONFIG = {
+    'Img/BrokenPot.png': [
+        { threshold: 0, img: 'Img/SunFlower/BrokenPot_Seed0.png', label: "CÂY MẦM" },
+        { threshold: 10, img: 'Img/SunFlower/BrokenPot_Seed1.png', label: "CÂY NON" },
+        { threshold: 30, img: 'Img/SunFlower/BrokenPot_Seed2.png', label: "TRƯỞNG THÀNH" },
+        { threshold: 50, img: 'Img/SunFlower/BrokenPot_Seed3.png', label: "NỤ HOA" },
+        { threshold: 70, img: 'Img/SunFlower/BrokenPot_Seed4.png', label: "NỞ HOA" }
+    ],
+    'Img/NormalPot.png': [
+        { threshold: 0, img: 'Img/SunFlower/NormalPot_seed0.png', label: "CÂY MẦM" },
+        { threshold: 10, img: 'Img/SunFlower/NormalPot_seed1.png', label: "CÂY NON" },
+        { threshold: 30, img: 'Img/SunFlower/NormalPot_seed2.png', label: "TRƯỞNG THÀNH" },
+        { threshold: 50, img: 'Img/SunFlower/NormalPot_seed3.png', label: "NỤ HOA" },
+        { threshold: 70, img: 'Img/SunFlower/NormalPot_seed4.png', label: "NỞ HOA" }
+    ],
+    'Img/GoldenPot.png': [
+        { threshold: 0, img: 'Img/SunFlower/GoldenPot_seed0.png', label: "CÂY MẦM" },
+        { threshold: 10, img: 'Img/SunFlower/GoldenPot_seed1.png', label: "CÂY NON" },
+        { threshold: 30, img: 'Img/SunFlower/GoldenPot_seed2.png', label: "TRƯỞNG THÀNH" },
+        { threshold: 50, img: 'Img/SunFlower/GoldenPot_seed3.png', label: "NỤ HOA" },
+        { threshold: 70, img: 'Img/SunFlower/GoldenPot_seed4.png', label: "NỞ HOA" }
+    ],
+    'Img/CoderPot.png': [
+        { threshold: 0, img: 'Img/SunFlower/NormalPot_seed0.png', label: "CÂY MẦM" },
+        { threshold: 10, img: 'Img/SunFlower/NormalPot_seed1.png', label: "CÂY NON" },
+        { threshold: 30, img: 'Img/SunFlower/NormalPot_seed2.png', label: "TRƯỞNG THÀNH" },
+        { threshold: 50, img: 'Img/SunFlower/NormalPot_seed3.png', label: "NỤ HOA" },
+        { threshold: 70, img: 'Img/SunFlower/NormalPot_seed4.png', label: "NỞ HOA" }
+    ]
+};
 
 window.defaultGardenText = "Cậu chọn hạt giống đi nào";
 
@@ -117,83 +326,42 @@ window.showConfirm = function (msg) {
     });
 };
 
-let currentUser = null;
-let userData = {};
-const FORTY_EIGHT_HOURS = 48 * 60 * 60 * 1000;
-const MAX_WATER = 16;
-const MAX_FERTILIZER = 3;
-
-const PLANT_STAGES_CONFIG = {
-    'Img/BrokenPot.png': [
-        { threshold: 0, img: 'Img/SunFlower/BrokenPot_Seed0.png', label: "CÂY MẦM" },
-        { threshold: 10, img: 'Img/SunFlower/BrokenPot_Seed1.png', label: "CÂY NON" },
-        { threshold: 30, img: 'Img/SunFlower/BrokenPot_Seed2.png', label: "TRƯỞNG THÀNH" },
-        { threshold: 50, img: 'Img/SunFlower/BrokenPot_Seed3.png', label: "NỤ HOA" },
-        { threshold: 70, img: 'Img/SunFlower/BrokenPot_Seed4.png', label: "NỞ HOA" }
-    ],
-    'Img/NormalPot.png': [
-        { threshold: 0, img: 'Img/SunFlower/NormalPot_seed0.png', label: "CÂY MẦM" },
-        { threshold: 10, img: 'Img/SunFlower/NormalPot_seed1.png', label: "CÂY NON" },
-        { threshold: 30, img: 'Img/SunFlower/NormalPot_seed2.png', label: "TRƯỞNG THÀNH" },
-        { threshold: 50, img: 'Img/SunFlower/NormalPot_seed3.png', label: "NỤ HOA" },
-        { threshold: 70, img: 'Img/SunFlower/NormalPot_seed4.png', label: "NỞ HOA" }
-    ],
-    'Img/GoldenPot.png': [
-        { threshold: 0, img: 'Img/SunFlower/GoldenPot_seed0.png', label: "CÂY MẦM" },
-        { threshold: 10, img: 'Img/SunFlower/GoldenPot_seed1.png', label: "CÂY NON" },
-        { threshold: 30, img: 'Img/SunFlower/GoldenPot_seed2.png', label: "TRƯỞNG THÀNH" },
-        { threshold: 50, img: 'Img/SunFlower/GoldenPot_seed3.png', label: "NỤ HOA" },
-        { threshold: 70, img: 'Img/SunFlower/GoldenPot_seed4.png', label: "NỞ HOA" }
-    ],
-    'Img/CoderPot.png': [
-        { threshold: 0, img: 'Img/SunFlower/NormalPot_seed0.png', label: "CÂY MẦM" },
-        { threshold: 10, img: 'Img/SunFlower/NormalPot_seed1.png', label: "CÂY NON" },
-        { threshold: 30, img: 'Img/SunFlower/NormalPot_seed2.png', label: "TRƯỞNG THÀNH" },
-        { threshold: 50, img: 'Img/SunFlower/NormalPot_seed3.png', label: "NỤ HOA" },
-        { threshold: 70, img: 'Img/SunFlower/NormalPot_seed4.png', label: "NỞ HOA" }
-    ]
-};
-
-const ITEM_DB = {
-    's1': { name: 'Hoa hướng dương', img: 'Img/SunFlower/Seed.png', type: 'seed' },
-    'p1': { name: 'Chậu Thường', img: 'Img/NormalPot.png', type: 'pot' },
-    'p2': { name: 'Chậu Vàng', img: 'Img/GoldenPot.png', type: 'pot' },
-    'p3': { name: 'Chậu Của Coder', img: 'Img/CoderPot.png', type: 'pot' },
-    'b1': { name: 'Khu vườn ban mai', img: 'Img/MinhQuanSeed.jpg', type: 'bg' },
-    'b2': { name: 'Rừng đêm huyền bí', img: 'Img/MinhQuanSeed.jpg', type: 'bg' },
-    'w1': { name: 'Bình Nước', img: 'Img/nuoc.png', type: 'tool' },
-    'f1': { name: 'Phân Bón', img: 'Img/phanbon.png', type: 'tool' }
-};
-
-function setupThanhCharacter() {
+function setupCharacter() {
     const mainBg = document.getElementById('main-bg');
     if (!mainBg) return;
 
-    let thanhContainer = document.getElementById('thanh-container');
-    if (!thanhContainer) {
-        thanhContainer = document.createElement('div');
-        thanhContainer.id = 'thanh-container';
+    let characterContainer = document.getElementById('thanh-container');
+    if (!characterContainer) {
+        characterContainer = document.createElement('div');
+        characterContainer.id = 'thanh-container';
 
         const seedHint = document.getElementById('seed-hint');
         if (seedHint) {
-            thanhContainer.appendChild(seedHint);
+            characterContainer.appendChild(seedHint);
         }
 
-        const crazyThanh = document.createElement('img');
-        crazyThanh.id = 'crazy-thanh';
-        crazyThanh.src = 'Img/crazy_thanh.png';
-        crazyThanh.onerror = function () { this.style.display = 'none'; };
-        thanhContainer.appendChild(crazyThanh);
+        const charImg = document.createElement('img');
+        charImg.id = 'crazy-thanh'; 
+        charImg.onerror = function () { this.style.display = 'none'; };
+        characterContainer.appendChild(charImg);
 
-        mainBg.appendChild(thanhContainer);
-
-        crazyThanh.onclick = () => {
-            if (userData.plantState !== 'dead' && userData.plantedSeed) {
-                const randomQuote = THANH_QUOTES[Math.floor(Math.random() * THANH_QUOTES.length)];
-                updateThanhSpeech(randomQuote, "success");
-            }
-        };
+        mainBg.appendChild(characterContainer);
     }
+
+    const charImg = document.getElementById('crazy-thanh');
+    const charType = getCurrentCharType();
+    
+    if (charType === 'quan') charImg.src = 'Img/DrMinhQuan.png';
+    else if (charType === 'quyen') charImg.src = 'Img/MinhQuyen.png';
+    else charImg.src = 'Img/crazy_thanh.png';
+
+    charImg.onclick = () => {
+        if (userData.plantState !== 'dead' && userData.plantedSeed) {
+            const currentBg = userData.equippedBg || 'Img/AnhBackGroundGarden.png';
+            const randomQuote = getCharacterQuote(charType, currentBg);
+            updateThanhSpeech(randomQuote, "success");
+        }
+    };
 }
 
 function initCareActions() {
@@ -212,6 +380,7 @@ function initCareActions() {
             e.stopPropagation();
             if (!currentUser) return;
             careDiv.classList.remove('show');
+            const charType = getCurrentCharType();
 
             if (!userData.inventory['w1'] || userData.inventory['w1'] <= 0) {
                 const isConfirm = await window.showConfirm("Cậu hết Nước mất rồi có muốn ghé Cửa Hàng mua thêm không");
@@ -220,11 +389,11 @@ function initCareActions() {
             }
 
             if (userData.plantState === 'dead') {
-                updateThanhSpeech("Cây đã chết úng rồi cậu nên nhổ để trồng cây mới đi", "error");
+                let msg = charType === 'quan' ? "Ngu ngốc! Ngươi đã dìm chết nó rồi. Nhổ đi!" : 
+                         (charType === 'quyen' ? "Tàn lụi rồi... Vòng lặp của tự nhiên." : "Waaaa! Cây chết úng rồi cậu nhổ lên trồng lại đi!");
+                updateThanhSpeech(msg, "error");
                 return;
             }
-
-            window.showActionLoader();
             const todayStr = new Date().toLocaleDateString('vi-VN');
             const now = Date.now();
 
@@ -234,11 +403,15 @@ function initCareActions() {
                     userData.inventory['w1'] -= 1;
                     if (userData.inventory['w1'] <= 0) delete userData.inventory['w1'];
 
+                    triggerDramaticDeath('overwatered');
+
                     updateGardenVisuals();
                     renderInventoryUI();
-                    window.hideActionLoader();
-                    updateThanhSpeech("Cây đã chết úng vì cậu tưới quá tay rồi", "error");
-
+                    
+                    let msg = charType === 'quan' ? "Cây đã thối rữa vì ngươi tưới quá tay! Nhổ bỏ đi!" : 
+                             (charType === 'quyen' ? "Sự sống đã chìm nghỉm trong sai lầm của ngươi." : "Wabo... Cây đã chết úng vì tưới quá tay rồi!");
+                    updateThanhSpeech(msg, "error");
+                    
                     updateDoc(doc(db, "users", currentUser.uid), {
                         plantState: 'dead', inventory: userData.inventory
                     }).catch(e => console.error(e));
@@ -266,7 +439,10 @@ function initCareActions() {
 
                 updateGardenVisuals();
                 renderInventoryUI();
-                updateThanhSpeech("Dừng lại cậu tưới ngập gốc cây rồi kìa", "error");
+                
+                let msg = charType === 'quan' ? "Dừng lại đồ phá hoại! Ngươi tính biến chậu cây thành bể bơi à?" : 
+                         (charType === 'quyen' ? "Nó đang chới với trong nước... giống như một kẻ lạc lõng." : "Waby wabo! Dừng lại! Cây sắp bơi trong chậu luôn rồi kìa!");
+                updateThanhSpeech(msg, "error");
 
                 updateDoc(doc(db, "users", currentUser.uid), {
                     inventory: userData.inventory, lastWatered: now, lastWaterDateStr: todayStr,
@@ -276,20 +452,23 @@ function initCareActions() {
             } else {
                 updateGardenVisuals();
                 renderInventoryUI();
-                updateThanhSpeech("Cảm ơn cậu đã tưới nước cây trông tươi tắn lắm", "success");
+                
+                let waterMsg = charType === 'quan' ? "Ngươi tưới nước được rồi đấy. Tiếp tục phát huy đi." : 
+                               (charType === 'quyen' ? "Tưới nước đi... đừng để sự tĩnh lặng này biến thành cái chết." : "Waby wabo! Cảm ơn cậu đã tưới nước, cây trông tươi tắn lắm!");
+                updateThanhSpeech(waterMsg, "success");
 
                 updateDoc(doc(db, "users", currentUser.uid), {
                     inventory: userData.inventory, lastWatered: now, lastWaterDateStr: todayStr,
                     waterCountToday: userData.waterCountToday, plantState: 'normal'
                 }).catch(e => console.error(e));
             }
-            window.hideActionLoader();
         };
 
         document.getElementById('btn-fertilize').onclick = async (e) => {
             e.stopPropagation();
             if (!currentUser) return;
             careDiv.classList.remove('show');
+            const charType = getCurrentCharType();
 
             if (!userData.phanbon || userData.phanbon <= 0) {
                 const isConfirm = await window.showConfirm("Cậu hết Phân bón rồi có muốn tới Thư Viện đọc sách kiếm thêm không");
@@ -298,37 +477,41 @@ function initCareActions() {
             }
 
             if (userData.plantState === 'dead') {
-                updateThanhSpeech("Cây chết rồi bón phân cũng vô ích thôi cậu ạ", "error");
+                let msg = charType === 'quan' ? "Cây chết rồi, phân bón không có tác dụng hồi sinh đâu!" : 
+                         (charType === 'quyen' ? "Tàn tro không thể sống lại bằng phân bón." : "Waaaa... Cây chết rồi bón phân cũng vô ích thôi.");
+                updateThanhSpeech(msg, "error");
                 return;
             }
 
             const todayStr = new Date().toLocaleDateString('vi-VN');
             if (userData.lastFertilizerDateStr === todayStr) {
-                updateThanhSpeech("Hôm nay cậu đã bón phân rồi mỗi ngày chỉ 1 lần thôi nhé", "warning");
+                let warnMsg = charType === 'quan' ? "Bộ não ngươi bị chậm à? Bón phân 1 ngày 1 lần thôi!" : 
+                               (charType === 'quyen' ? "Hấp tấp không mang lại kết quả. Hôm nay đủ rồi." : "Hôm nay cậu đã bón phân rồi mỗi ngày chỉ 1 lần thôi nhé");
+                updateThanhSpeech(warnMsg, "warning");
                 return;
             }
 
             if (userData.fertilizerTime) {
-                updateThanhSpeech("Cây đang tiêu hóa phân bón đợt trước cậu đợi thêm chút nhé", "warning");
+                let msg = charType === 'quan' ? "Ngươi không biết cơ chế hấp thụ à? Nó đang quá tải dinh dưỡng rồi đấy!" : 
+                         (charType === 'quyen' ? "Cây đang hấp thụ. Đừng làm phiền quá trình của nó." : "Burb! Cây đang tiêu hóa phân bón đợt trước, đợi chút nhé!");
+                updateThanhSpeech(msg, "warning");
                 return;
             }
-
-            window.showActionLoader();
             userData.phanbon -= 1;
             userData.fertilizerTime = Date.now();
             userData.lastFertilizerDateStr = todayStr;
 
             updateGardenVisuals();
             renderInventoryUI();
-            updateThanhSpeech("Đã bón phân cây sẽ lớn thêm sau 30 phút nữa", "success");
-
+            
+            let fertMsg = charType === 'quan' ? "Đã bón phân. Hãy xem công trình quang hợp vĩ đang diễn ra đi!" : 
+                         (charType === 'quyen' ? "Dinh dưỡng hòa vào đất. Sự phát triển diễn ra trong im lặng." : "Đã bón phân! Sao cây không lớn nhỉ?. Ogga bogga!");
+            updateThanhSpeech(fertMsg, "success");
             updateDoc(doc(db, "users", currentUser.uid), {
                 phanbon: userData.phanbon,
                 fertilizerTime: userData.fertilizerTime,
                 lastFertilizerDateStr: userData.lastFertilizerDateStr
             }).catch(e => console.error(e));
-            
-            window.hideActionLoader();
         };
     }
 }
@@ -343,9 +526,9 @@ onAuthStateChanged(auth, async (user) => {
                 cheatBtn.onclick = handleCheatGrowth;
             }
         }
-        setupThanhCharacter();
-        initCareActions();
         await fetchAndCheckUser();
+        setupCharacter(); 
+        initCareActions();
     } else {
         currentUser = null;
         const loader = document.getElementById('page-loader');
@@ -381,8 +564,10 @@ async function fetchAndCheckUser() {
 
     updateGardenVisuals();
     renderInventoryUI();
-    const loader = document.getElementById('page-loader');
-    if (loader) loader.classList.add('hidden-loader');
+    setTimeout(() => {
+        const loader = document.getElementById('page-loader');
+        if (loader) loader.classList.add('hidden-loader');
+    }, 1000);
 
     startFertilizerLoop();
     startThanhAutoTalk();
@@ -418,6 +603,7 @@ function startThanhAutoTalk() {
 
         if (currentUser && userData) {
             let msg = window.defaultGardenText;
+            const charType = getCurrentCharType();
 
             if (userData.plantedSeed && userData.plantState === 'normal' && userData.plantProgress < 100) {
                 const todayStr = new Date().toLocaleDateString('vi-VN');
@@ -426,20 +612,25 @@ function startThanhAutoTalk() {
 
                 if (needsWater || needsFertilizer) {
                     if (lastReminderWasCare) {
-                        msg = "Hãy thử bấm vào chậu đi";
+                        msg = charType === 'quan' ? "Bấm vào chậu đi, ta không nhắc lại lần hai đâu!" : 
+                             (charType === 'quyen' ? "Chăm sóc nó đi. Đừng để ta phải lên tiếng." : "Hãy thử bấm vào chậu đi Wabo!");
                         lastReminderWasCare = false;
                     } else {
                         if (needsWater && needsFertilizer) {
-                            msg = "Cậu ơi cây khát nước và đói phân bón kìa";
+                            msg = charType === 'quan' ? "Ngươi định giết cái cây này bằng sự thiếu hụt cả nước lẫn phân bón sao?" : 
+                                 (charType === 'quyen' ? "Sự sống đang kiệt quệ dần. Nó cần nước và dinh dưỡng." : "Raawr! Cây khát nước và đói phân bón kìa!");
                         } else if (needsWater) {
-                            msg = "Cây đang cần nước đấy cậu tưới cho nó đi";
+                            msg = charType === 'quan' ? "Cây đang thiếu H2O. Tưới nó ngay!" : 
+                                 (charType === 'quyen' ? "Đất đang khô cằn. Cho nó một chút sự sống đi." : "Cây đang cần nước đấy cậu tưới cho nó đi!");
                         } else if (needsFertilizer) {
-                            msg = "Cậu vào Thư Viện kiếm phân bón cho cây mau lớn nhé";
+                            msg = charType === 'quan' ? "Kém cỏi. Vào Thư Viện đọc sách kiếm phân bón ngay!" : 
+                                 (charType === 'quyen' ? "Tới Thư Viện mang phân bón về. Cây cần nuôi dưỡng." : "Cậu vào Thư Viện kiếm phân bón cho cây mau lớn nhé!");
                         }
                         lastReminderWasCare = true;
                     }
                 } else {
-                    msg = THANH_QUOTES[Math.floor(Math.random() * THANH_QUOTES.length)];
+                    const currentBg = userData.equippedBg || 'Img/AnhBackGroundGarden.png';
+                    msg = getCharacterQuote(charType, currentBg);
                     lastReminderWasCare = false;
                 }
             }
@@ -459,6 +650,7 @@ function updateGardenVisuals() {
     const seedHint = document.getElementById('seed-hint');
     const potWrapper = document.getElementById('pot-wrapper');
     const btnFertilize = document.getElementById('btn-fertilize');
+    const charType = getCurrentCharType();
 
     if (mainBg) {
         mainBg.style.backgroundImage = `url('${userData.equippedBg || 'Img/AnhBackGroundGarden.png'}')`;
@@ -494,10 +686,15 @@ function updateGardenVisuals() {
         }
 
         currentPlantStageImg = currentStage.img;
-
         if (userData.plantState === 'dead') {
             if (centerPot) centerPot.classList.add('dead-plant');
-            currentLabel = "Cây đã chết mất rồi";
+            currentLabel = charType === 'quan' ? "Thí nghiệm thất bại. Một cái xác khô." : 
+                          (charType === 'quyen' ? "Cái chết là sự giải thoát trong im lặng." : "Cây đã chết úng mất rồi wabo...");
+            let potPrefix = 'BrokenPot';
+            if (currentPotImg.includes('NormalPot') || currentPotImg.includes('CoderPot')) potPrefix = 'NormalPot';
+            if (currentPotImg.includes('GoldenPot')) potPrefix = 'GoldenPot';
+            
+            currentPlantStageImg = `Img/SunFlower/${potPrefix}_seeddead.png`;
         }
         else if (userData.plantState === 'overwatered') {
             if (Date.now() - userData.overwateredTime > FORTY_EIGHT_HOURS) {
@@ -505,7 +702,8 @@ function updateGardenVisuals() {
                 userData.waterCountToday = 0;
             } else {
                 if (centerPot) centerPot.classList.add('overwatered-plant');
-                currentLabel = "Cây sắp úng rồi cậu dừng tưới đi";
+                currentLabel = charType === 'quan' ? "Cây sắp úng rồi, dừng hành động ngu ngốc lại!" : 
+                              (charType === 'quyen' ? "Đừng nhấn chìm nó thêm nữa." : "Wabo! Cây sắp bơi trong chậu rồi dừng tưới đi!");
             }
         }
 
@@ -517,12 +715,15 @@ function updateGardenVisuals() {
 
             if (isWithered && progress < 100) {
                 if (centerPot) centerPot.classList.add('withered-plant');
-                currentLabel = "Cây đang héo kìa cậu tưới nước đi";
+                currentLabel = charType === 'quan' ? "Thiếu H2O trầm trọng. Ngươi định để nó chết khát à?" : 
+                              (charType === 'quyen' ? "Cây đang khát. Cứu nó trước khi quá muộn." : "Cây đang héo kìa cậu tưới nước đi");
             } else {
                 if (progress >= 100) {
-                    currentLabel = "Hoa nở rồi cậu thu hoạch đi";
+                    currentLabel = charType === 'quan' ? "Cũng được đấy. Thu hoạch nhanh đi." : 
+                                  (charType === 'quyen' ? "Đến lúc chia tay. Thu hoạch đi." : "Hoa nở rồi cậu thu hoạch đi");
                 } else {
-                    currentLabel = "Chào cậu nhớ chăm sóc cây mỗi ngày nhé";
+                    currentLabel = charType === 'quan' ? "Ta đang giám sát ngươi chăm cây đấy." : 
+                                  (charType === 'quyen' ? "Ta vẫn đứng đây, lặng lẽ chờ hoa nở." : "Waby wabo! Nhớ chăm sóc cây mỗi ngày nhé!");
                 }
             }
         }
@@ -534,7 +735,8 @@ function updateGardenVisuals() {
 
     } else {
         if (potWrapper) potWrapper.classList.remove('is-planted');
-        currentLabel = "Cậu chọn hạt giống đi nào";
+        currentLabel = charType === 'quan' ? "Thùng rỗng kêu to, chậu không gieo hạt. Gieo đi!" : 
+                      (charType === 'quyen' ? "Khoảng trống. Đợi một hạt giống được gieo xuống." : "Cậu chọn hạt giống đi nào");
         userData.lastStageLabel = null;
     }
 
@@ -551,6 +753,7 @@ function updateGardenVisuals() {
 async function handleCheatGrowth() {
     userData.inventory['w1'] = Math.min((userData.inventory['w1'] || 0) + 5, MAX_WATER);
     userData.phanbon = Math.min((userData.phanbon || 0) + 2, MAX_FERTILIZER);
+    const charType = getCurrentCharType();
 
     if (userData.plantedSeed && userData.plantState !== 'dead') {
         userData.plantProgress = Math.min((userData.plantProgress || 0) + 50, 100);
@@ -564,7 +767,10 @@ async function handleCheatGrowth() {
 
     updateGardenVisuals();
     renderInventoryUI();
-    updateThanhSpeech("Đã tua thời gian cây lại cần chăm sóc rồi đấy", "success");
+    
+    let cheatMsg = charType === 'quan' ? "Thao túng thời gian sao? Thú vị đấy, chăm sóc tiếp đi." : 
+                  (charType === 'quyen' ? "Bước nhảy vọt phi lý. Nhưng hoa vẫn sẽ nở." : "Tớ vừa dùng cỗ máy thời gian bằng chảo! Cây lại đói rồi!");
+    updateThanhSpeech(cheatMsg, "success");
 
     updateDoc(doc(db, "users", currentUser.uid), {
         inventory: userData.inventory,
@@ -602,18 +808,16 @@ if (closeInvBtn) {
 if (potWrapper) {
     potWrapper.onclick = async () => {
         if (!currentUser) return;
+        const charType = getCurrentCharType();
 
         if (userData.plantState === 'dead') {
             const isConfirm = await window.showConfirm("Cây đã chết do úng nước. Cậu có muốn nhổ bỏ để trồng cây mới không?");
             if (isConfirm) {
-                window.showActionLoader();
                 userData.plantedSeed = null; userData.plantProgress = 0; userData.plantState = 'normal'; userData.waterCountToday = 0; userData.lastFertilizerDateStr = null;
                 updateGardenVisuals();
                 updateDoc(doc(db, "users", currentUser.uid), {
                     plantedSeed: null, plantProgress: 0, plantState: 'normal', waterCountToday: 0, lastFertilizerDateStr: null
-                }).then(() => window.hideActionLoader()).catch(e => {
-                    console.error(e); window.hideActionLoader();
-                });
+                }).catch(e => console.error(e));
             }
             return;
         }
@@ -627,12 +831,14 @@ if (potWrapper) {
             if (userData.plantProgress >= 100 && userData.plantState !== 'dead') {
                 const isConfirm = await window.showConfirm("Cậu có muốn thu hoạch bông hoa này để đóng góp cho cộng đồng không?");
                 if (isConfirm) {
-                    window.showActionLoader();
                     userData.plantedSeed = null; userData.plantProgress = 0; userData.fertilizerTime = null; userData.waterCountToday = 0; userData.lastFertilizerDateStr = null;
 
                     updateGardenVisuals();
                     renderInventoryUI();
-                    updateThanhSpeech("Thu hoạch thành công cám ơn cậu nha", "success");
+                    
+                    let harvestMsg = charType === 'quan' ? "Hừm, cũng thu hoạch được đấy. Tiếp tục làm culi cho ta đi." : 
+                                    (charType === 'quyen' ? "Một thành quả nhỏ bé giữa thế giới rộng lớn. Cất nó đi." : "Raaww! Thu hoạch thành công, cám ơn cậu nha!");
+                    updateThanhSpeech(harvestMsg, "success");
 
                     setDoc(doc(db, "server", "stats"), {
                         totalFlowers: increment(1), realFlowers: increment(1)
@@ -640,9 +846,8 @@ if (potWrapper) {
 
                     updateDoc(doc(db, "users", currentUser.uid), {
                         plantedSeed: null, plantProgress: 0, fertilizerTime: null, waterCountToday: 0, plantState: 'normal', lastFertilizerDateStr: null
-                    }).then(() => window.hideActionLoader()).catch(e => {
-                        updateThanhSpeech("Có lỗi xảy ra cậu kiểm tra lại mạng xem sao", "error");
-                        window.hideActionLoader();
+                    }).catch(e => {
+                        updateThanhSpeech(charType === 'quan' ? "Lỗi kết nối. Kỹ năng của ngươi tệ đến mức làm sập mạng à?" : "Hình như mạng bị zombie cắn đứt rồi, thử lại nhé!", "error");
                     });
                 }
             } else if (userData.plantState !== 'dead') {
@@ -679,11 +884,10 @@ function renderInventoryUI() {
     const bgContainer = document.getElementById('inv-bgs');
 
     const tabs = document.querySelectorAll('.inv-tab');
-    if (tabs.length > 1) tabs[1].textContent = 'CÔNG CỤ';
+    if (tabs.length > 1) tabs[1].textContent = 'KHO';
 
     let htmlSeeds = '', htmlPots = '', htmlBgs = '';
     if (userData.seeds > 0 && !userData.inventory['s1']) userData.inventory['s1'] = userData.seeds;
-
     let wCount = Math.min((userData.inventory['w1'] || 0), MAX_WATER);
     htmlPots += `
         <div class="inv-item-card">
@@ -693,7 +897,6 @@ function renderInventoryUI() {
             <button class="btn-use" onclick="handleToolClick('w1')">CÁCH NHẬN</button>
         </div>
     `;
-
     let fCount = Math.min((userData.phanbon || 0), MAX_FERTILIZER);
     htmlPots += `
         <div class="inv-item-card">
@@ -703,9 +906,36 @@ function renderInventoryUI() {
             <button class="btn-use" onclick="handleToolClick('f1')">CÁCH NHẬN</button>
         </div>
     `;
+    
+    if (userData.inventory['c1'] > 0 || userData.equippedChar === 'c1') {
+        let isCharEquipped = userData.equippedChar === 'c1';
+        htmlPots += `
+            <div class="inv-item-card">
+                <img src="${ITEM_DB['c1'].img}" class="inv-item-img">
+                <div class="inv-item-name">${ITEM_DB['c1'].name}</div>
+                <div class="inv-item-qty">Sở hữu</div>
+                <button class="btn-use ${isCharEquipped ? 'btn-unequip' : ''}" onclick="useItem('c1', 'character', '${isCharEquipped ? 'unequip' : 'c1'}')">
+                    ${isCharEquipped ? 'GỠ BỎ' : 'TRANG BỊ'}
+                </button>
+            </div>
+        `;
+    }
+    if (userData.inventory['c2'] > 0 || userData.equippedChar === 'c2') {
+        let isCharEquipped = userData.equippedChar === 'c2';
+        htmlPots += `
+            <div class="inv-item-card">
+                <img src="${ITEM_DB['c2'].img}" class="inv-item-img">
+                <div class="inv-item-name">${ITEM_DB['c2'].name}</div>
+                <div class="inv-item-qty">Sở hữu</div>
+                <button class="btn-use ${isCharEquipped ? 'btn-unequip' : ''}" onclick="useItem('c2', 'character', '${isCharEquipped ? 'unequip' : 'c2'}')">
+                    ${isCharEquipped ? 'GỠ BỎ' : 'TRANG BỊ'}
+                </button>
+            </div>
+        `;
+    }
 
     for (const [id, count] of Object.entries(userData.inventory)) {
-        if (!ITEM_DB[id] || !count || id === 'w1' || id === 'f1') continue;
+        if (!ITEM_DB[id] || !count || id === 'w1' || id === 'f1' || id === 'c1' || id === 'c2') continue;
         const item = ITEM_DB[id];
 
         let isEquipped = (item.type === 'pot' && userData.equippedPot === item.img) ||
@@ -747,13 +977,15 @@ function renderInventoryUI() {
 
 window.useItem = async (id, type, actionPath) => {
     if (!currentUser) return;
-    window.showActionLoader();
+    const charType = getCurrentCharType();
 
     if (type === 'seed') {
         if (invWrapper) invWrapper.classList.remove('show');
         if (bagIcon) bagIcon.src = 'Img/bag_closed.png';
 
-        updateThanhSpeech(`Đã gieo hạt nhớ tưới nước thường xuyên nhé`, 'success');
+        let gieoHatMsg = charType === 'quan' ? "Cuối cùng ngươi cũng bắt đầu làm việc. Đừng để nó chết." : 
+                        (charType === 'quyen' ? "Một mầm sống cô độc bắt đầu từ đây." : "Waaaby wabo! Đã gieo hạt nhớ tưới nước thường xuyên nhé");
+        updateThanhSpeech(gieoHatMsg, 'success');
 
         userData.plantedSeed = ITEM_DB[id].img;
         userData.seeds -= 1;
@@ -774,23 +1006,34 @@ window.useItem = async (id, type, actionPath) => {
             plantedSeed: ITEM_DB[id].img, seeds: userData.seeds, inventory: userData.inventory,
             plantProgress: userData.plantProgress, lastWatered: userData.lastWatered,
             fertilizerTime: null, plantState: 'normal', waterCountToday: 0, lastFertilizerDateStr: null
-        }).then(() => window.hideActionLoader()).catch(e => { console.error(e); window.hideActionLoader(); });
+        }).catch(e => console.error(e));
     }
     else if (type === 'pot') {
         const newPot = actionPath === 'unequip' ? 'Img/BrokenPot.png' : actionPath;
         userData.equippedPot = newPot === 'Img/BrokenPot.png' ? null : newPot;
         updateGardenVisuals();
         renderInventoryUI();
+        
         updateDoc(doc(db, "users", currentUser.uid), { equippedPot: newPot === 'Img/BrokenPot.png' ? null : newPot })
-            .then(() => window.hideActionLoader()).catch(e => { console.error(e); window.hideActionLoader(); });
+            .catch(e => console.error(e));
     }
     else if (type === 'bg') {
         const newBg = actionPath === 'unequip' ? 'Img/AnhBackGroundGarden.png' : actionPath;
         userData.equippedBg = newBg === 'Img/AnhBackGroundGarden.png' ? null : newBg;
         updateGardenVisuals();
         renderInventoryUI();
+        
         updateDoc(doc(db, "users", currentUser.uid), { equippedBg: newBg === 'Img/AnhBackGroundGarden.png' ? null : newBg })
-            .then(() => window.hideActionLoader()).catch(e => { console.error(e); window.hideActionLoader(); });
+            .catch(e => console.error(e));
+    }
+    else if (type === 'character') {
+        const newChar = actionPath === 'unequip' ? null : id;
+        userData.equippedChar = newChar;
+        setupCharacter(); 
+        renderInventoryUI();
+        
+        updateDoc(doc(db, "users", currentUser.uid), { equippedChar: newChar })
+            .catch(e => console.error(e));
     }
 };
 
