@@ -2,167 +2,98 @@ import { doc, getDoc, setDoc, updateDoc, onSnapshot, increment } from "https://w
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { db, auth } from './firebase-config.js';
 
-const actionLoader = document.createElement('div');
-actionLoader.id = 'action-loader';
-actionLoader.innerHTML = '<div class="action-spinner"></div>';
-document.body.appendChild(actionLoader);
-
-window.showActionLoader = () => { document.getElementById('action-loader').style.display = 'flex'; };
-window.hideActionLoader = () => { document.getElementById('action-loader').style.display = 'none'; };
-
 const levelUpAudio = new Audio('Audio/chill.mp3');
 levelUpAudio.volume = 0.5;
 
+// === HỆ THỐNG THOẠI TƯƠNG TÁC THEO NHÂN VẬT, NỀN VÀ CHẬU ===
 const DIALOGUES = {
     thanh: {
         default: [
-            "Waby wabo! Cậu có thấy cái chảo của tớ đâu không?", "Baaaaaaaow! Cây khát nước rồi, hoặc có thể nó thèm bánh mì thịt!",
-            "Tớ vừa ăn một quyển sách... à nhầm, đọc một cái bánh Taco!", "Raaaawr! Gieo hạt đi, tớ đang giữ khu vườn an toàn khỏi bọn thây ma vô hình!",
-            "Hôm nay trời đẹp để đội chảo lên đầu ra vườn đọc sách đấy!", "Cậu có phân bón không? Tớ định dùng nó làm sốt cà chua!",
-            "Rooby rooby roo! Đọc xong trang này cậu mua cho tớ cái Taco nhé?", "Tại sao tớ lại đứng đây? BỞI VÌ TỚ ĐIÊN RỒOOOO!",
-            "Cây của cậu đang lớn, giống như cách tóc tớ mọc trong cái chảo này vậy!", "Tưới nước cho nó đi, đừng tưới lên đầu tớ!",
-            "Focus Mode à? Có bằng chế độ Taco-Mode của tớ không?", "Này! Có con kiến đang tính ăn trộm kiến thức của cậu kìa!",
-            "Sách hay đấy! Có đoạn nào dạy làm sốt Mayonnaise không?", "Grraargh! Thu hoạch hoa nhanh lên trước khi tớ ăn mất nó!",
-            "Tớ bán mọi thứ từ xe cũ đến phân bón... nhưng kiến thức thì cậu phải tự cày!", "Bluh bluh bluh! Đọc sách nhiều vào, não to ra thì đội chảo mới chật!",
-            "Cây đang lớn! Cây đang lớn! Giống như cái bụng của tớ sau khi ăn phở!", "Một ngày không đọc sách là một ngày không có Taco!",
-            "Tớ cá 10 cái chảo là cây này nở ra sẽ đẹp lắm đây!", "Xin chào! Tớ là Thành. Nhưng mọi người thường gọi tớ là... CRAZY THÀNH!"
+            "Waby wabo! Cậu có thấy cái chảo của tớ đâu không?", "Baaaaaaaow! Cây khát nước rồi, hoặc thèm bánh mì thịt!",
+            "Tớ vừa ăn một quyển sách... à nhầm, đọc một cái bánh Taco!", "Raaaawr! Tớ đang giữ khu vườn an toàn khỏi bọn thây ma vô hình!",
+            "Focus Mode à? Có bằng chế độ Taco-Mode của tớ không?", "Này! Có con kiến đang tính ăn trộm kiến thức của cậu kìa!"
         ],
-        b1: [
-            "Trời sáng rồi! Mang chảo ra phơi nắng thôi!", "Oa, nắng sớm làm Taco của tớ giòn hơn đấy!",
-            "Cây đang tập thể dục buổi sáng kìa, Wabo!", "Nắng chiếu lung linh muôn hoa vàng... và cái chảo của tớ!",
-            "Bình minh là lúc zombie lười nhất, an toàn rồi!", "Mặt trời to quá, trông như một cái bánh Crepe khổng lồ!",
-            "Dậy đọc sách thôi! Chim đang hót 'Waby Wabo' kìa!", "Nắng làm tớ hắt xì! Át chù! Rớt luôn cái chảo!",
-            "Cậu có thấy giọt sương không? Tớ vừa nếm thử, vị lạt nhách!", "Buổi sáng ở đây trong lành quá, tớ muốn ăn sáng 3 lần!",
-            "Hoa hướng dương thích nắng, tớ thì thích ngủ nướng... khò khò.", "Dậy sớm để thành công! Hoặc để ăn được nhiều Taco hơn!",
-            "Ánh sáng ban mai làm nụ hoa nở nhanh hơn đó!", "Tớ định nấu trứng ốp la bằng ánh nắng này, chảo sẵn sàng rồi!",
-            "Trời xanh, mây trắng, nắng vàng, và tớ... điên rồ!", "Đọc sách buổi sáng giúp não cậu to như cái chậu này vậy!",
-            "Wabo! Gió mát quá, thổi bay mất cả suy nghĩ của tớ rồi!", "Tưới nước buổi sáng là chuẩn bài nhất đấy!",
-            "Mặt trời chào cậu kìa, chào lại đi: Baaaaow!", "Không khí này làm tớ muốn múa điệu Zombie vỡ lòng!"
-        ],
-        b2: [
-            "Tối thui! Cậu có mang theo đuốc không?", "Suỵt! Đêm nay tớ nghe thấy tiếng sột soạt... chắc là zombie!",
-            "Khu rừng này rùng rợn quá, tớ trốn vào chảo đây!", "Cây có ngủ không nhỉ? Hay nó thức để đọc sách cùng cậu?",
-            "Wabo... đom đóm bay quanh chậu kìa, tớ tưởng là đạn súng la-de!", "Trăng sáng quá, giống hệt một chiếc đĩa ném!",
-            "Đêm huyền bí, tớ định nấu súp bí ẩn bằng phân bón và nước mương!", "Đừng đọc truyện ma ở đây nhé, tớ sợ tè ra quần mất!",
-            "Cây ban đêm thở ra CO2, tớ thở ra tiếng ngáy khò khò...", "Bóng tối thế này thì bọn thây ma sẽ không thấy tớ đâu!",
-            "Rừng đêm yên tĩnh quá, tớ phải hét lên cho vui: WABO!", "Ngôi sao trên kia có rơi xuống thành hạt giống không nhỉ?",
-            "Lạnh quá! Cho tớ mượn áo khoác, hoặc cái lò sưởi đi!", "Ban đêm thì hoa nở kiểu gì? Nở lén à?",
-            "Nếu có ma, tớ sẽ dùng chảo đập nó một trận!", "Chậu cây ban đêm trông như cái hũ vàng phát sáng!",
-            "Tớ vừa thấy một cái bóng! Ồ, là bóng của tớ.", "Thức khuya hại sức khỏe, nhưng vì cậu nên tớ sẽ thức gác vườn!",
-            "Gió rít ghê quá! Raaaawr! Tớ rít lại luôn cho sợ!", "Khò... khò... tớ đang gác... khò..."
-        ],
-        b3: [
-            "Oaaaa! Chó bự kìa! Tớ cỡi lên lưng nó được không?", "Bé sói này có thích ăn thịt nướng không nhỉ?",
-            "Nó đang nhìn tớ kìa... Đừng cắn chảo của tớ nhé!", "Wabo! Tớ và sói sẽ hợp tác bảo vệ khu vườn!",
-            "Con sói này ngầu quá, tớ vuốt lông nó nhé? AAAA nó gầm!", "Này Sói, mày có biết sủa 'Waby wabo' không?",
-            "Sói và Crazy Thành! Cặp bài trùng vô địch vũ trụ!", "Mắt nó đỏ kìa, tớ lấy kính râm đeo cho nó nha?",
-            "Nó thở ra khói hay tớ đang hoa mắt thế?", "Tớ cá là bé sói này cũng thích đọc tiểu thuyết ngôn tình!",
-            "Gâu! Gâu! Tớ đang giao tiếp với nó bằng tiếng Sói!", "Con sói này bảo vệ vườn tốt hơn chảo của tớ đấy!",
-            "Đừng để sói đói nhé, không nó ăn mất cây của cậu đấy!", "Nếu zombie tới, tớ sẽ chỉ tay bảo: 'Sói, cắn nó!'",
-            "Bộ lông này mượt thật, làm chăn đắp mùa đông thì tuyệt!", "Sói ơi! Đi mua giùm anh cái bánh mì Taco!",
-            "Cậu chủ của con sói này chắc phải ngầu lắm!", "Tớ đang dạy sói tưới cây, nhưng nó lại đi vệ sinh vào chậu...",
-            "Nó cứ chằm chằm vào cái chảo của tớ. Không ăn được đâu!", "Sói cô độc gặp Thành điên rồ... hết cô độc luôn!"
-        ]
+        bgs: {
+            b1: ["Trời sáng rồi! Mang chảo ra phơi nắng thôi!", "Oa, nắng sớm làm Taco của tớ giòn hơn đấy!", "Chim đang hót 'Waby Wabo' kìa!"],
+            b2: ["Tối thui! Cậu có mang theo đuốc không?", "Suỵt! Đêm nay tớ nghe thấy tiếng sột soạt... chắc là zombie!", "Đom đóm bay quanh chậu kìa!"],
+            b3: ["Oaaaa! Chó bự kìa! Tớ cỡi lên lưng nó được không?", "Bé sói này có thích ăn thịt nướng không nhỉ?", "Wabo! Sói và Thành là số 1!"],
+            b4: ["Waa! Chú Quân nóng quá, chảo của tớ sắp chảy rồi!", "Đỏ rực! Không biết có nướng được thịt không nhỉ?", "Ông ấy đang quát mắng cái cây kìa, tớ sợ quá!"]
+        },
+        pots: {
+            p1: [
+                "Cái chậu này màu giống hệt bánh nướng!", "Chậu đất nung là số một! Rẻ mà xài tốt!", "Tớ từng đội một cái chậu thế này thay chảo đấy!", "Cậu cẩn thận đừng làm vỡ nó nhé, tớ không có keo dán đâu!", "Đất nung giúp cây dễ thở hơn, giống như tớ mở miệng lúc ngủ vậy!"
+            ],
+            p2: [
+                "Wabo! Chậu vàng chói mắt quá!", "Cái chậu này mua được bao nhiêu cái bánh Taco nhỉ?", "Vàng thật hay vàng giả thế? Để tớ cắn thử xem!", "Zombie mà thấy chậu này là nó trộm luôn đấy!", "Chậu xịn thế này trồng hoa chắc thành hoa vàng mất!"
+            ],
+            p3: [
+                "Chậu này có phím bấm à? Gõ thử xem nào!", "Tớ thấy dòng code chạy trên chậu kìa! Nó viết gì thế?", "Nếu tớ gõ W-A-B-O thì chậu có nổ không?", "Chậu điện tử này có chống nước không thế? Tưới vào có giật không?", "Wow, chậu của Coder cơ đấy! Chắc nó tự bắt sâu được!"
+            ]
+        },
+        combos: {
+            b1_p2: ["Wabo! Nắng chiếu vào chậu vàng lấp lánh làm tớ chói cả mắt!", "Buổi sáng và chậu vàng, combo rực rỡ nhất vũ trụ!"],
+            b2_p3: ["Ánh đèn LED của chậu Coder thắp sáng cả khu rừng đêm này!", "Chậu điện tử giữa rừng u ám, trông như đĩa bay UFO vậy!"],
+            b3_p1: ["Sói có vẻ thích mùi đất nung của cái chậu này đấy!", "Sói bảo vệ chậu đất, chậu đất nuôi cây, tớ thì ăn Taco!"],
+            b4_p2: ["Chậu vàng cũng chảy thành nước dưới cơn giận này mất! Nóng quá!"]
+        }
     },
     quan: {
         default: [
-            "Thật thảm hại. Ngươi nghĩ vài trang sách có thể đọ lại bộ óc vĩ đại của ta sao?", "Cái cây xơ xác của ngươi làm ta chướng mắt. Tưới nước đi!",
-            "Ta đã tính toán được tỷ lệ héo úa... 100% nếu ngươi lười biếng!", "Ngươi gọi đây là 'vườn' sao? Ta gọi đây là 'phòng thí nghiệm thất bại'.",
-            "Bón phân đi. Dù nó không giúp IQ của ngươi tăng lên.", "Ta, Tiến sĩ Minh Quân vĩ đại, đang phí phạm thời gian nhìn ngươi trồng trọt.",
-            "Trí thông minh của ngươi bằng đúng số lá trên cái cây này. Tròn trĩnh số 0.", "Cố gắng đọc sách đi, để thu hẹp khoảng cách vô cực giữa ta và ngươi.",
-            "Ngươi định để nó chết khát sao? Một chiến lược thật tồi tệ.", "Cái chậu của ngươi thiếu tính logic. Thật nhàm chán.",
-            "BloomRead? Ta có thể lập trình ra ứng dụng này trong lúc nhắm mắt.", "Tưới quá tay rồi kìa! Não ngươi không chứa nổi khái niệm 'vừa đủ' sao?",
-            "Thu hoạch hoa đi, để ta xem thành quả thảm hại của ngươi.", "Sách của ngươi toàn kiến thức tầm thường.",
-            "Khu vườn này đang làm ô nhiễm tầm nhìn vĩ đại của ta.", "Cây cần H2O. Đó là Nước đấy, giải thích cho kẻ kém cỏi hiểu.",
-            "Tên Crazy Thành là đồ ngốc, ngươi còn tệ hơn khi để cây héo.", "Bón phân vào! Thuật toán nói nó đang thiếu Nitơ trầm trọng.",
-            "Chỉ kẻ não phẳng mới không biết dùng Focus Mode.", "Ghi nhớ tên ta: Tiến Sĩ Minh Quân! Kẻ thống trị khu vườn này."
+            "Thật thảm hại. Ngươi nghĩ vài trang sách có thể đọ lại bộ óc vĩ đại của ta sao?", "Ta đã tính toán được tỷ lệ héo úa... 100% nếu ngươi lười biếng!",
+            "Ngươi gọi đây là 'vườn' sao? Ta gọi đây là 'phòng thí nghiệm thất bại'.", "Ta đang thu thập dữ liệu về sự kém cỏi của ngươi. Rất phong phú!"
         ],
-        b1: [
-            "Ánh sáng ban mai hoàn hảo. Phổ quang phổ ở mức tối ưu để quang hợp.", "UV index đang tăng. Ngươi có định che chắn cho thí nghiệm không?",
-            "Nhiệt độ buổi sáng phù hợp để các enzym trong lá hoạt động.", "Khu vườn ban mai à? Một cái tên sến súa thiếu tính khoa học.",
-            "Ánh sáng chói lóa này đang cản trở tầm nhìn màn hình vi tính của ta.", "Ta đã thức trắng đêm để làm việc, và ánh mặt trời này thật chướng mắt.",
-            "Sự ngưng tụ của nước trên lá - hiện tượng vật lý cơ bản, không có gì lạ.", "Nhanh lên, tận dụng tối đa chu trình Calvin khi còn có ánh sáng.",
-            "Tiếng chim ồn ào. Ta nên chế tạo một cỗ máy tạo sóng siêu âm để đuổi chúng.", "Bình minh chỉ là ảo ảnh quang học do sự tự quay của Trái Đất.",
-            "Quang hợp đang diễn ra với tốc độ 2.3 micromol CO2 mỗi giây.", "Ngươi đứng ngây ra đó ngắm cảnh à? Trí tuệ không tự sinh ra đâu!",
-            "Ánh nắng làm lộ rõ sự yếu ớt của cái cây thí nghiệm này.", "Ta không cần phơi nắng. Bức xạ mặt trời có hại cho tế bào da thiên tài.",
-            "Đừng để đất bốc hơi hết H2O. Sự bốc thoát hơi nước đang tăng cao.", "Một buổi sáng hoàn hảo để ta chứng minh định lý mới.",
-            "Nắng ấm? Cảm xúc con người thật thừa thãi và phi logic.", "Ta có thể tính được góc chiếu của mặt trời là bao nhiêu độ lúc này.",
-            "Không khí trong lành không làm não ngươi thông minh lên được đâu.", "Tiếp tục đọc sách đi, đừng để ánh sáng làm phân tâm bộ não nhỏ bé đó."
-        ],
-        b2: [
-            "Bóng tối. Không có ánh sáng, pha tối của quang hợp sẽ sớm dừng lại.", "Nhiệt độ giảm. Tốc độ chuyển hóa trong thực vật đang chậm đi.",
-            "Tại sao ngươi lại chọn không gian phi logic này để trồng cây?", "Bóng tối cản trở việc quan sát số liệu. Ta cần bật đèn pha 10.000 lumen.",
-            "Rừng đêm huyền bí? Nghe như một tựa game rẻ tiền thiếu thực tế.", "Những âm thanh này... sinh vật sống về đêm đang hoạt động quanh đây.",
-            "Không có quang hợp tự nhiên, ta đề xuất dùng đèn LED phổ nhân tạo.", "Đêm là lúc ta hoạt động hiệu suất 200%. Ngươi thì đang ngáp dài.",
-            "Sự sụt giảm lượng ánh sáng ảnh hưởng nghiêm trọng đến chu kỳ sinh học.", "Đừng để nỗi sợ hãi nguyên thủy bóng tối chi phối não bộ ngươi.",
-            "Nếu ngươi sợ ma, ta có thể chứng minh chúng không tồn tại bằng toán học.", "Môi trường thiếu sáng. Phân bón lúc này là giải pháp bù đắp duy nhất.",
-            "Thực vật đang hô hấp. Nó đang cướp O2 của ta. Đáng giận!", "Bóng đêm này làm ta nhớ đến không gian vô định của vũ trụ... cũng tầm thường.",
-            "Sương đêm đang bổ sung một lượng độ ẩm siêu vi cho chất nền.", "Đừng lấy cớ buồn ngủ để trốn tránh việc đọc sách.",
-            "Màn đêm đen như tương lai học thuật của ngươi vậy.", "Rừng khuya, nhiệt độ sụt giảm, ngươi nên mặc thêm áo nếu không muốn ốm.",
-            "Sự tĩnh lặng này khá tốt để tập trung... nếu ngươi không cứ thở mạnh thế.", "Dữ liệu ban đêm đã được ta thu thập xong. Thí nghiệm tiếp tục."
-        ],
-        b3: [
-            "Một cá thể Canis lupus? Ai cho phép mang dã thú vào phòng thí nghiệm?", "Hệ thống thần kinh của con vật này có vẻ phản ứng bất thường với ta.",
-            "Đừng để con sói đó cắn nát mẫu vật thực vật của ta!", "Ta có thể tính toán lực cắn của nó: đủ để nghiền nát xương ngươi đấy.",
-            "Bức xạ năng lượng quanh con sói này không hợp lý. Đột biến gen chăng?", "Một con sói cô độc. Bầy đàn là sự yếu đuối, nó hiểu được điều đó.",
-            "Mang nó ra xa khỏi ta! Lông chó sói làm giảm độ vô trùng của áo blouse!", "Minh Quyền và con sói này... đều mang một sự phi logic khó chịu.",
-            "Ánh mắt của dã thú. Nó đang phân tích điểm yếu của ta ư? Hoang tưởng!", "Ta đang tự hỏi nếu cấy ghép chip vào não con sói này thì sao...",
-            "Nó không sủa. Ít ra nó biết giữ im lặng khi thiên tài đang suy nghĩ.", "Sự tồn tại của sinh vật này nằm ngoài phương trình sinh thái thông thường.",
-            "Nó đang bảo vệ ngươi sao? Thật nực cười. Một cái máy quét tia laser sẽ tốt hơn.", "Con sói này có vẻ thích cái chậu. Thật thiếu tính thẩm mỹ.",
-            "Quan sát sự di chuyển của nó... cơ bắp hoàn hảo, nhưng trí não vẫn là cầm thú.", "Đừng tưởng có sói bảo vệ thì ngươi không cần làm bài tập!",
-            "Nếu nó dám gầm vào mặt ta, ta sẽ biến nó thành thí nghiệm tĩnh điện.", "Môi trường có dã thú làm tăng hormone cortisol, giúp ngươi tỉnh táo hơn đấy.",
-            "Ta không sợ chó. Ta chỉ không thích sự giao tiếp vô nghĩa với sinh vật bậc thấp.", "Sói của Minh Quyền? Một sản phẩm thiết kế lai tạp sự cường điệu."
-        ]
+        bgs: {
+            b1: ["Ánh sáng ban mai hoàn hảo. Phổ quang phổ ở mức tối ưu để quang hợp.", "UV index đang tăng. Ngươi có định che chắn cho thí nghiệm không?"],
+            b2: ["Bóng tối. Không có ánh sáng, pha tối của quang hợp sẽ sớm dừng lại.", "Ta cần bật đèn pha 10.000 lumen. Tối quá!"],
+            b3: ["Một cá thể Canis lupus? Ai cho phép mang dã thú vào phòng thí nghiệm?", "Đừng để con sói đó cắn nát mẫu vật thực vật của ta!"],
+            b4: ["SỰ KÉM CỎI CỦA NGƯƠI ĐÃ VƯỢT QUÁ GIỚI HẠN CHỊU ĐỰNG CỦA TA!", "TẤT CẢ SẼ BỊ THIÊU RỤI BỞI TRÍ TUỆ CỦA TA!", "CÚT ĐI! ĐỪNG LÀM BẨN TẦM NHÌN CỦA TA NỮA!"]
+        },
+        pots: {
+            p1: [
+                "Chậu đất nung rẻ tiền. Không có gì đáng để phân tích.", "Ngươi định ươm mầm sự vĩ đại trong cái bình gốm tầm thường này sao?", "Tính thẩm mỹ là con số không, nhưng tính thực dụng thì tạm chấp nhận.", "Đất nung có độ xốp, giúp thoát nước. Ít ra ngươi không quá ngu ngốc."
+            ],
+            p2: [
+                "Vàng là chất dẫn điện tốt, nhưng làm chậu thì thật phô trương.", "Ngươi tưởng vàng có thể tăng tốc độ quang hợp sao? Ngu xuẩn.", "Kẻ ngốc mới đem kim loại quý đi đựng đất bùn.", "Au - Khối lượng riêng 19.3 g/cm³. Khá nặng đấy, đừng để rớt trúng chân."
+            ],
+            p3: [
+                "Mã code trên chậu này thật sơ sài. Ta có thể viết hay hơn nghìn lần.", "Ta có thể hack cái chậu này trong 3 giây. Nhưng ta không rảnh.", "Cuối cùng cũng có một thiết bị xứng tầm trí tuệ của ta... một chút.", "Hệ thống đèn LED có vẻ đồng bộ. Ai thiết kế nó vậy? Chắc không phải ngươi."
+            ]
+        },
+        combos: {
+            b1_p2: ["Ánh phản xạ cực đại. Ta phải đeo kính bảo hộ vì sự kết hợp chói loà và lố bịch này."],
+            b2_p3: ["Khá khen cho hệ thống đèn LED của chậu Coder đang cung cấp một lượng quang phổ nhỏ giữa đêm."],
+            b3_p1: ["Sinh vật hoang dã và vật chứa nguyên thủy. Một phương trình sinh thái cơ bản hoàn chỉnh."],
+            b4_p3: ["LỖI HỆ THỐNG! NGAY CẢ CÁI CHẬU NÀY CŨNG ĐANG CHẾ NHẠO TA SAO?!"]
+        }
     },
     quyen: {
         default: [
             "...", "Sự tĩnh lặng là một món quà. Đừng phá vỡ nó.", "Ta chuộng bóng tối hơn những lời sáo rỗng.", 
-            "Gieo hạt đi. Một mầm sống cô độc bắt đầu.", "Tưới nước. Chăm sóc sự sống không cần phải ồn ào.",
-            "Mỗi cuốn sách là một thế giới cô lập. Ta thích chìm vào đó.", "Chậu cây này... đường nét thiết kế khá tạm bợ.",
-            "Ngươi ồn ào quá. Tập trung đi.", "Ta không cần ai hiểu. Chỉ cần cây tiếp tục sống.",
-            "Hãy để thời gian làm việc của nó. Đừng ép buộc.", "Phân bón... nuôi dưỡng từ những thứ mục nát.",
-            "Hoa nở hay tàn, cuối cùng cũng trở về với đất.", "Không cần ánh hào quang. Ta hoạt động tốt nhất trong bóng râm.",
-            "Sự sống thật mong manh... giống như những bản nháp thiết kế bị vứt bỏ.", "Hãy đọc trong yên lặng. Trí tuệ sinh ra từ sự cô độc.",
-            "Thế giới quá nhiều tạp âm. BloomRead là nơi ta tìm thấy sự phẳng lặng.", "Cây đang lớn. Chậm rãi và không phô trương.",
-            "Kẻ mạnh nhất là kẻ chịu đựng được sự cô đơn.", "Đừng hỏi ta tại sao lại đứng đây. Ta thích thế.",
-            "Ta là Minh Quyền. Mọi thứ chỉ cần hoàn hảo trong tĩnh lặng."
+            "Gieo hạt đi. Một mầm sống cô độc bắt đầu.", "Mỗi cuốn sách là một thế giới cô lập. Ta thích chìm vào đó."
         ],
-        b1: [
-            "Ban mai... quá nhiều ánh sáng. Nó làm ta nhức mắt.", "Tiếng ồn của buổi sáng phá hỏng thiết kế tĩnh lặng của ta.",
-            "Ánh mặt trời gay gắt. Ta muốn trở về với bóng râm.", "Mọi thứ bị phơi bày dưới ánh sáng này. Không có chỗ cho sự bí ẩn.",
-            "Chim hót, gió thổi. Một bản giao hưởng hỗn loạn.", "Ta không thuộc về khung cảnh rực rỡ này.",
-            "Che bớt nắng lại. Tác phẩm của ta cần độ tương phản trầm hơn.", "Khung cảnh này quá sặc sỡ. Nó làm lu mờ chủ thể.",
-            "Ban mai là sự bắt đầu ồn ào mà ta buộc phải chấp nhận.", "Nắng vàng trên lá xanh. Bố cục màu sắc cơ bản... hơi nhàm chán.",
-            "Ta thà vẽ một bầu trời xám xịt còn hơn sự tươi tắn giả tạo này.", "Ánh sáng chói lóa không che giấu được sự thật trống rỗng.",
-            "Tưới nước nhanh đi để ta tìm chỗ trú nắng.", "Chậu cây trông thật lạc lõng giữa ánh sáng rực rỡ này.",
-            "Bình minh nhắc nhở ta rằng một ngày mệt mỏi lại bắt đầu.", "Ta ghét sự nhiệt tình của buổi sáng.",
-            "Đừng bắt ta phải mỉm cười với mặt trời. Không bao giờ.", "Nhiệt độ đang tăng. Cảm giác khó chịu lan tỏa.",
-            "Khung cảnh này thiếu đi chiều sâu của bóng tối.", "Hãy để ta yên dưới tán cây này. Khỏi ánh sáng mặt trời."
-        ],
-        b2: [
-            "Rừng đêm... Nơi ta thuộc về.", "Bóng tối bao trùm. Mọi đường nét đều trở nên tinh tế.",
-            "Sự tĩnh mịch tuyệt đối. Đây mới là cảm hứng thiết kế của ta.", "Dưới ánh trăng, chậu cây trông như một kiệt tác cô độc.",
-            "Bóng đêm giấu đi những khuyết điểm của trần thế.", "Không có tạp âm. Chỉ có tiếng thở của màn đêm.",
-            "Màu đen không phải là u ám. Nó là sự bao dung vô tận.", "Ta có thể đứng đây hàng giờ mà không cảm thấy phiền phức.",
-            "Rừng khuya lạnh lẽo. Nhưng nó chân thật hơn ban ngày.", "Ánh sáng yếu ớt của cây là điểm nhấn hoàn hảo cho canvas này.",
-            "Hãy cứ đọc sách trong tĩnh lặng. Đêm sẽ bảo vệ ngươi.", "Sự huyền bí của bóng tối kích thích tư duy nghệ thuật.",
-            "Ta yêu sự đơn sắc của cảnh vật lúc này.", "Khu rừng này chia sẻ sự cô độc cùng ta.",
-            "Chỉ những kẻ mạnh mẽ mới dám đối diện với bóng tối.", "Những chiếc lá chìm trong bóng râm... một vẻ đẹp u uất.",
-            "Đừng bật đèn. Ngươi sẽ phá hỏng kiệt tác không gian này.", "Gió đêm thổi qua. Ta nghe thấy tiếng gọi của sự hư vô.",
-            "Không cần phô trương. Đêm tối tự thân nó đã là quyền lực.", "Chăm sóc cây đi. Đêm nay sẽ dài đấy."
-        ],
-        b3: [
-            "Bạn của ta. Chúng ta thuộc về nhau.", "Con sói này hiểu sự tĩnh lặng tốt hơn bất kỳ con người nào.",
-            "Bộ lông trắng, lửa đỏ, bóng đêm. Phối màu hoàn hảo do ta tạo ra.", "Sói cô độc... Ta tìm thấy hình bóng mình trong nó.",
-            "Đừng sợ nó. Nó chỉ cắn những kẻ đạo đức giả.", "Sự hiện diện của nó mang lại cho ta cảm giác an toàn câm lặng.",
-            "Sói không cần bầy đàn để chứng minh sức mạnh.", "Ngươi thấy ngọn lửa trên lưng nó chứ? Đó là ngọn lửa của sự kiêu hãnh.",
-            "Nó đang gác đêm. Ngươi cứ việc đọc sách đi.", "Ánh mắt nó sắc bén, nhìn thấu những điều giả dối.",
-            "Đừng vuốt ve nó. Sự tôn trọng bắt đầu từ việc giữ khoảng cách.", "Chậu cây và con sói. Một sự kết hợp dị biệt nhưng hài hòa.",
-            "Ta thiết kế ra nó bằng tất cả tâm hồn đơn độc của mình.", "Nghe tiếng thở của nó xem. Nhịp điệu của vùng hoang dã.",
-            "Nó không thích sự ồn ào của tên Thành, hay sự ngạo mạn của tên Quân.", "Chỉ cần ta và sói ở đây, không ai có thể làm phiền khu vườn này.",
-            "Đừng để nó đói. Dù nó có thể nhịn, nhưng ta không thích.", "Vẻ đẹp của nó là vẻ đẹp của sự nguy hiểm bị kìm nén.",
-            "Nó đi bên ta như một cái bóng rực lửa.", "Ngươi có vinh hạnh lớn khi được chiêm ngưỡng tác phẩm sống này đấy."
-        ]
+        bgs: {
+            b1: ["Ban mai... quá nhiều ánh sáng. Nó làm ta nhức mắt.", "Tiếng ồn của buổi sáng phá hỏng thiết kế tĩnh lặng của ta."],
+            b2: ["Rừng đêm... Nơi ta thuộc về.", "Bóng tối bao trùm. Mọi đường nét đều trở nên tinh tế."],
+            b3: ["Bạn của ta. Chúng ta thuộc về nhau.", "Con sói này hiểu sự tĩnh lặng tốt hơn bất kỳ con người nào."],
+            b4: ["Ngọn lửa của sự tức giận chỉ thiêu rụi chính người mang nó.", "Ồn ào. Ta cần bóng tối.", "Một kẻ thông minh nhưng không biết kiểm soát cảm xúc."]
+        },
+        pots: {
+            p1: [
+                "Sự nguyên thủy. Ta thích nó.", "Không màu mè, chỉ là đất và mầm sống.", "Chậu đất nung thấm hút mồ hôi của tự nhiên.", "Quay về với cát bụi. Đó là định mệnh của mọi sinh vật.", "Đơn giản là đỉnh cao của sự tinh tế."
+            ],
+            p2: [
+                "Sự lấp lánh giả tạo. Ta không ưa.", "Vàng không làm cái chết trở nên đẹp đẽ hơn.", "Quá chói lọi cho sự cô độc của ta.", "Một chiếc lồng vàng cho một linh hồn tự do. Thật trớ trêu.", "Sự xa hoa vô nghĩa giữa vòng xoáy sinh tử."
+            ],
+            p3: [
+                "Ánh sáng xanh điện tử... lạnh lẽo.", "Máy móc cũng biết cô đơn sao?", "Những dòng code chạy vô tận, như một vòng lặp không lối thoát.", "Sự sống hữu cơ bị nhốt trong một nhà tù thuật toán.", "Ta nghe thấy tiếng bíp tĩnh lặng của linh kiện điện tử."
+            ]
+        },
+        combos: {
+            b1_p2: ["Sự phô trương của vàng hòa cùng sự chói lóa của bình minh. Một bức tranh nhức mắt."],
+            b2_p3: ["Giữa rừng u tối, ánh điện tử lập lòe như những linh hồn nhân tạo đi lạc."],
+            b3_p1: ["Sói của ta gác bên chậu đất cằn cỗi. Một vẻ đẹp u sầu tuyệt mỹ."],
+            b4_p1: ["Đất nung không cháy, nhưng ngọn lửa điên rồ của hắn sẽ làm nó nứt vỡ."]
+        }
     }
 };
 
@@ -186,20 +117,46 @@ const ITEM_DB = {
     'b1': { name: 'Khu vườn ban mai', img: 'Img/KhuVuonBanMai.jpg', type: 'bg' }, 
     'b2': { name: 'Rừng đêm huyền bí', img: 'Img/Rung_Dem_Huyen_Bi.png', type: 'bg' }, 
     'b3': { name: 'Sói của Minh Quyền', img: 'Img/SoiCuaMinhQuyen.png', type: 'bg' }, 
+    'b4': { name: 'Sự Phẫn Nộ Của Quân', img: 'Img/Dr.Minh_Quan_Gian_Giu.jpg', type: 'bg' }, 
     'w1': { name: 'Bình Nước', img: 'Img/nuoc.png', type: 'tool' },
     'f1': { name: 'Phân Bón', img: 'Img/phanbon.png', type: 'tool' },
     'c1': { name: 'Dr.Minh Quân', img: 'Img/DrMinhQuan.png', type: 'character' },
     'c2': { name: 'Quyền Cô Độc', img: 'Img/MinhQuyen.png', type: 'character' } 
 };
 
-function getCharacterQuote(charType, bgImg) {
+// === HÀM RANDOM THOẠI TỔNG HỢP ===
+function getCharacterQuote(charType, bgImg, potImg) {
     let bgKey = 'default';
     if (bgImg === 'Img/KhuVuonBanMai.jpg') bgKey = 'b1';
     else if (bgImg === 'Img/Rung_Dem_Huyen_Bi.png') bgKey = 'b2';
     else if (bgImg === 'Img/SoiCuaMinhQuyen.png') bgKey = 'b3';
+    else if (bgImg === 'Img/Dr.Minh_Quan_Gian_Giu.jpg') bgKey = 'b4';
 
-    const quotes = DIALOGUES[charType][bgKey] || DIALOGUES[charType]['default'];
-    return quotes[Math.floor(Math.random() * quotes.length)];
+    let potKey = 'default';
+    if (potImg.includes('NormalPot')) potKey = 'p1';
+    else if (potImg.includes('GoldenPot')) potKey = 'p2';
+    else if (potImg.includes('CoderPot')) potKey = 'p3';
+
+    const charData = DIALOGUES[charType];
+    let possibleQuotes = [];
+
+    possibleQuotes.push(...charData.default);
+    
+    if (charData.bgs && charData.bgs[bgKey]) {
+        possibleQuotes.push(...charData.bgs[bgKey]);
+    }
+    
+    if (charData.pots && charData.pots[potKey]) {
+        possibleQuotes.push(...charData.pots[potKey]);
+        possibleQuotes.push(...charData.pots[potKey]);
+    }
+
+    const comboKey = `${bgKey}_${potKey}`;
+    if (charData.combos && charData.combos[comboKey]) {
+        for(let i=0; i<5; i++) possibleQuotes.push(...charData.combos[comboKey]);
+    }
+
+    return possibleQuotes[Math.floor(Math.random() * possibleQuotes.length)];
 }
 
 function getCurrentCharType() {
@@ -214,16 +171,11 @@ function triggerDramaticDeath(cause) {
     const deathOverlay = document.getElementById('dramatic-death-overlay');
     const deathMessageText = document.getElementById('death-message-text');
 
-    if (deathMessageText) {
-        deathMessageText.textContent = message;
-    }
-    if (deathOverlay) {
-        deathOverlay.classList.add('show');
-    }
+    if (deathMessageText) deathMessageText.textContent = message;
+    if (deathOverlay) deathOverlay.classList.add('show');
+    
     setTimeout(() => {
-        if (deathOverlay) {
-            deathOverlay.classList.remove('show');
-        }
+        if (deathOverlay) deathOverlay.classList.remove('show');
         updateGardenVisuals();
     }, 5000);
 }
@@ -356,11 +308,91 @@ function setupCharacter() {
     else charImg.src = 'Img/crazy_thanh.png';
 
     charImg.onclick = () => {
-        if (userData.plantState !== 'dead' && userData.plantedSeed) {
+        if (userData.plantState === 'dead') {
+            let deadMsg = charType === 'quan' ? "Thí nghiệm thất bại. Một cái xác khô." : 
+                          (charType === 'quyen' ? "Cái chết là sự giải thoát trong im lặng." : "Cây đã chết úng mất rồi wabo...");
+            updateThanhSpeech(deadMsg, "error");
+        } else if (userData.plantedSeed) {
             const currentBg = userData.equippedBg || 'Img/AnhBackGroundGarden.png';
-            const randomQuote = getCharacterQuote(charType, currentBg);
+            const currentPot = userData.equippedPot || 'Img/BrokenPot.png';
+            const randomQuote = getCharacterQuote(charType, currentBg, currentPot);
             updateThanhSpeech(randomQuote, "success");
+        } else {
+            let emptyMsg = charType === 'quan' ? "Thùng rỗng kêu to, chậu không gieo hạt. Gieo đi!" : 
+                          (charType === 'quyen' ? "Khoảng trống. Đợi một hạt giống được gieo xuống." : "Cậu chọn hạt giống đi nào");
+            updateThanhSpeech(emptyMsg, "warning");
         }
+    };
+}
+
+// === LOGIC VIDEO BACKGROUND KẾT HỢP JUMPSCARE MINH QUÂN ===
+let bgVideoInterval = null;
+
+function handleBackgroundVideo() {
+    const videoEl = document.getElementById('wolf-bg-video');
+    if (!videoEl) return;
+
+    if (bgVideoInterval) {
+        clearInterval(bgVideoInterval);
+        bgVideoInterval = null;
+    }
+
+    // Nền Quyền: Sói hú (Tỉ lệ 50%, mỗi 15s)
+    if (userData.equippedBg === 'Img/SoiCuaMinhQuyen.png') {
+        if(videoEl.src.indexOf('VideoSoiCoDoc.mp4') === -1) videoEl.src = 'Video/VideoSoiCoDoc.mp4';
+        bgVideoInterval = setInterval(() => {
+            if (Math.random() >= 0.5) playBgVideo(videoEl, false, 'wolf');
+        }, 15000);
+    } 
+    // Nền Quân: Giận dữ (Tỉ lệ 50%, mỗi 30s)
+    else if (userData.equippedBg === 'Img/Dr.Minh_Quan_Gian_Giu.jpg') {
+        if(videoEl.src.indexOf('Dr.Minh_Quan_Gian_Giu.mp4') === -1) videoEl.src = 'Video/Dr.Minh_Quan_Gian_Giu.mp4';
+        bgVideoInterval = setInterval(() => {
+            if (Math.random() >= 0.5) playBgVideo(videoEl, false, 'quan');
+        }, 30000); // 30s 1 lần
+    } else {
+        videoEl.pause();
+        videoEl.classList.remove('playing');
+        videoEl.onended = null;
+    }
+}
+
+function playBgVideo(videoEl, force = false, type = 'wolf') {
+    if (!videoEl.paused && !force) return; 
+    videoEl.currentTime = 0;
+    
+    const mainBg = document.getElementById('main-bg');
+
+    videoEl.play().then(() => {
+        videoEl.classList.add('playing');
+        
+        // NẾU LÀ MINH QUÂN: Ẩn sạch mọi thứ trên màn hình để video làm trung tâm (Jumpscare 3s)
+        if (type === 'quan' && mainBg) {
+            videoEl.style.zIndex = '99999';
+            Array.from(mainBg.children).forEach(child => {
+                if (child.id !== 'wolf-bg-video') {
+                    child.dataset.oldOpacity = child.style.opacity || '';
+                    child.style.opacity = '0';
+                    child.style.pointerEvents = 'none';
+                }
+            });
+        }
+    }).catch(e => console.log("Không thể tự động phát video:", e));
+
+    videoEl.onended = () => {
+        videoEl.classList.remove('playing');
+        
+        // Phục hồi lại toàn bộ UI
+        if (type === 'quan' && mainBg) {
+            videoEl.style.zIndex = '1';
+            Array.from(mainBg.children).forEach(child => {
+                if (child.id !== 'wolf-bg-video') {
+                    child.style.opacity = child.dataset.oldOpacity || '';
+                    child.style.pointerEvents = '';
+                }
+            });
+        }
+        videoEl.onended = null;
     };
 }
 
@@ -403,6 +435,16 @@ function initCareActions() {
                     userData.inventory['w1'] -= 1;
                     if (userData.inventory['w1'] <= 0) delete userData.inventory['w1'];
 
+                    let updatePayload = {
+                        plantState: 'dead', inventory: userData.inventory
+                    };
+
+                    // KIỂM TRA ĐIỀU KIỆN MỞ KHOÁ MQGD
+                    if (charType === 'quan' && !userData.MQGD) {
+                        userData.MQGD = true;
+                        updatePayload.MQGD = true;
+                    }
+
                     triggerDramaticDeath('overwatered');
 
                     updateGardenVisuals();
@@ -412,9 +454,7 @@ function initCareActions() {
                              (charType === 'quyen' ? "Sự sống đã chìm nghỉm trong sai lầm của ngươi." : "Wabo... Cây đã chết úng vì tưới quá tay rồi!");
                     updateThanhSpeech(msg, "error");
                     
-                    updateDoc(doc(db, "users", currentUser.uid), {
-                        plantState: 'dead', inventory: userData.inventory
-                    }).catch(e => console.error(e));
+                    updateDoc(doc(db, "users", currentUser.uid), updatePayload).catch(e => console.error(e));
 
                     return;
                 } else {
@@ -630,7 +670,8 @@ function startThanhAutoTalk() {
                     }
                 } else {
                     const currentBg = userData.equippedBg || 'Img/AnhBackGroundGarden.png';
-                    msg = getCharacterQuote(charType, currentBg);
+                    const currentPot = userData.equippedPot || 'Img/BrokenPot.png';
+                    msg = getCharacterQuote(charType, currentBg, currentPot);
                     lastReminderWasCare = false;
                 }
             }
@@ -656,6 +697,8 @@ function updateGardenVisuals() {
         mainBg.style.backgroundImage = `url('${userData.equippedBg || 'Img/AnhBackGroundGarden.png'}')`;
         mainBg.style.position = 'relative';
     }
+
+    handleBackgroundVideo();
 
     if (centerPot) centerPot.classList.remove('withered-plant', 'overwatered-plant', 'dead-plant');
 
@@ -767,6 +810,15 @@ async function handleCheatGrowth() {
 
     updateGardenVisuals();
     renderInventoryUI();
+    
+    // GỌI VIDEO NGAY KHI BẤM NÚT "GIA TRƯỞNG" NẾU CÓ TRANG BỊ
+    if (userData.equippedBg === 'Img/SoiCuaMinhQuyen.png') {
+        const videoEl = document.getElementById('wolf-bg-video');
+        if (videoEl) playBgVideo(videoEl, true, 'wolf');
+    } else if (userData.equippedBg === 'Img/Dr.Minh_Quan_Gian_Giu.jpg') {
+        const videoEl = document.getElementById('wolf-bg-video');
+        if (videoEl) playBgVideo(videoEl, true, 'quan');
+    }
     
     let cheatMsg = charType === 'quan' ? "Thao túng thời gian sao? Thú vị đấy, chăm sóc tiếp đi." : 
                   (charType === 'quyen' ? "Bước nhảy vọt phi lý. Nhưng hoa vẫn sẽ nở." : "Tớ vừa dùng cỗ máy thời gian bằng chảo! Cây lại đói rồi!");

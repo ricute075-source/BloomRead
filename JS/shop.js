@@ -19,13 +19,14 @@ const shopData = {
         { id: 'p3', name: 'Chậu Của Coder', price: 0, img: 'Img/CoderPot.png' }
     ],
     bgs: [
-        { id: 'b1', name: 'Khu vườn ban mai', price: 200, img: 'Img/MinhQuanSeed.jpg' },
+        { id: 'b1', name: 'Khu vườn ban mai', price: 200, img: 'Img/KhuVuonBanMai.jpg' },
         { id: 'b2', name: 'Rừng đêm huyền bí', price: 500, img: 'Img/Rung_Dem_Huyen_Bi.png' },
-        { id: 'b3', name: 'Sói của Minh Quyền', price: 500, img: 'Img/SoiCuaMinhQuyen.png' } // Nền mới
+        { id: 'b3', name: 'Sói của Minh Quyền', price: 500, img: 'Img/SoiCuaMinhQuyen.png' },
+        { id: 'b4', name: 'Sự Phẫn Nộ Của Quân', price: 400, img: 'Img/Dr.Minh_Quan_Gian_Giu.jpg' } // Nền Ẩn MQGD
     ],
     events: [
         { id: 'c1', name: 'Dr.Minh Quân', price: 0, img: 'Img/DrMinhQuan.png' },
-        { id: 'c2', name: 'Quyền Cô Độc', price: 0, img: 'Img/MinhQuyen.png' } // Nhân vật mới
+        { id: 'c2', name: 'Quyền Cô Độc', price: 0, img: 'Img/MinhQuyen.png' }
     ]
 };
 
@@ -68,12 +69,20 @@ function renderShopItems(containerId, items) {
         const ownedCount = inventory[item.id] || 0;
         let btnHtml = '';
         let displayName = item.name;
+        let displayPrice = item.price;
 
         // Xử lý điều kiện ẩn cho Nền Sói của Minh Quyền
         if (item.id === 'b3' && !inventory['c2']) {
             displayName = "???";
+            displayPrice = "???";
             btnHtml = `<button class="btn-buy" disabled>CẦN CHỦ NHÂN</button>`;
         } 
+        // Xử lý điều kiện ẩn cho Nền Dr Minh Quân Giận Dữ (MQGD)
+        else if (item.id === 'b4' && !userData.MQGD) {
+            displayName = "???";
+            displayPrice = "???";
+            btnHtml = `<button class="btn-buy btn-unequip" onclick="showPopup('Hãy khiến ông ta tức giận')">ĐIỀU KIỆN</button>`;
+        }
         else if (item.id === 'w1') {
             if (ownedCount >= MAX_WATER) {
                 btnHtml = `<button class="btn-buy" disabled>TỐI ĐA (${MAX_WATER}/${MAX_WATER})</button>`;
@@ -105,7 +114,7 @@ function renderShopItems(containerId, items) {
             <div class="item-name">${displayName}</div>
             <div class="item-price">
                 <img src="${COIN_ICON}" alt="Coin">
-                <span>${item.price}</span>
+                <span>${displayPrice}</span>
             </div>
             ${btnHtml}
         </div>
@@ -127,9 +136,12 @@ window.buyItem = async (id, name, price, category) => {
     if (!userData.inventory) userData.inventory = {};
     const currentOwned = userData.inventory[id] || 0;
     
-    // Bảo mật thêm: Chặn mua nền b3 nếu chưa có c2 (phòng trường hợp click bằng console)
+    // Bảo mật điều kiện mua
     if (id === 'b3' && !userData.inventory['c2']) {
         return showPopup("Bạn cần nhận Designer Minh Quyền trước khi mua nền này!");
+    }
+    if (id === 'b4' && !userData.MQGD) {
+        return showPopup("Hãy khiến ông ta tức giận!");
     }
 
     if (id === 'w1' && currentOwned >= MAX_WATER) return showPopup(`Bạn đã đạt giới hạn ${MAX_WATER} chai nước trong balo!`);
@@ -162,9 +174,8 @@ window.buyItem = async (id, name, price, category) => {
                            (category === 'tab-pots' ? shopData.pots : 
                            (category === 'tab-bgs' ? shopData.bgs : shopData.events));
     
-    // Render lại cả 2 tab bgs và event nếu vừa nhận c2 để Nền b3 được cập nhật trạng thái
     if (id === 'c2') {
-        renderShopItems('tab-bgs', shopData.bgs);
+        renderShopItems('tab-bgs', shopData.bgs); // Cập nhật lại tab hình nền nếu vừa nhận Minh Quyền
     }
     renderShopItems(category, currentTabItems);
 
@@ -177,7 +188,6 @@ window.buyItem = async (id, name, price, category) => {
         } else if (id === 'c1') {
             showPopup(`Từ Tiến sĩ Minh Quân\n"Ta, Tiến sĩ Minh Quân, xin gửi lời ghi nhận đến tất cả các ngươi vì đã ủng hộ dự án BloomRead. Dù trí tuệ của các ngươi có lẽ sẽ không bao giờ sánh kịp ta, nhưng sự nỗ lực học hỏi này rất đáng khen ngợi. Nhớ chăm chỉ đọc sách và đừng làm héo những cái cây đó, ta sẽ luôn giám sát các ngươi!"`);
         } else if (id === 'c2') {
-            // Lời cảm ơn từ Minh Quyền
             showPopup(`Từ Designer Minh Quyền\n"Cảm ơn bạn đã luôn ủng hộ BloomRead! Hy vọng những thiết kế của mình sẽ mang lại cho bạn một không gian đọc sách thật thư giãn và đầy cảm hứng. Hãy ghé qua cửa hàng Nền, mình có một bé sói đang đợi bạn đón về đấy!"`);
         } else {
             showPopup(`Đã lưu [${name}] vào Kho Đồ của bạn!`);
