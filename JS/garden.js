@@ -5,94 +5,235 @@ import { db, auth } from './firebase-config.js';
 const levelUpAudio = new Audio('Audio/chill.mp3');
 levelUpAudio.volume = 0.5;
 
-// === HỆ THỐNG THOẠI TƯƠNG TÁC THEO NHÂN VẬT, NỀN VÀ CHẬU ===
+
 const DIALOGUES = {
     thanh: {
         default: [
             "Waby wabo! Cậu có thấy cái chảo của tớ đâu không?", "Baaaaaaaow! Cây khát nước rồi, hoặc thèm bánh mì thịt!",
             "Tớ vừa ăn một quyển sách... à nhầm, đọc một cái bánh Taco!", "Raaaawr! Tớ đang giữ khu vườn an toàn khỏi bọn thây ma vô hình!",
-            "Focus Mode à? Có bằng chế độ Taco-Mode của tớ không?", "Này! Có con kiến đang tính ăn trộm kiến thức của cậu kìa!"
+            "Focus Mode à? Có bằng chế độ Taco-Mode của tớ không?", "Này! Có con kiến đang tính ăn trộm kiến thức của cậu kìa!",
+            "Cậu tính trồng một cây xúc xích à? Tớ đói rồi!", "Tớ nghe nói thây ma rất sợ hoa hướng dương đấy!",
+            "Cái chảo này thu sóng ngoài hành tinh tốt lắm, Wabo!", "Tớ vừa sáng chế ra món Taco kẹp mầm cây... đùa thôi!",
+            "Đừng nhìn tớ, nhìn cái cây kìa! Nó đang rướn lên đó!", "Raawwr! Tớ sẵn sàng chiến đấu rồi, mang xẻng ra đây!"
         ],
         bgs: {
-            b1: ["Trời sáng rồi! Mang chảo ra phơi nắng thôi!", "Oa, nắng sớm làm Taco của tớ giòn hơn đấy!", "Chim đang hót 'Waby Wabo' kìa!"],
-            b2: ["Tối thui! Cậu có mang theo đuốc không?", "Suỵt! Đêm nay tớ nghe thấy tiếng sột soạt... chắc là zombie!", "Đom đóm bay quanh chậu kìa!"],
-            b3: ["Oaaaa! Chó bự kìa! Tớ cỡi lên lưng nó được không?", "Bé sói này có thích ăn thịt nướng không nhỉ?", "Wabo! Sói và Thành là số 1!"],
-            b4: ["Waa! Chú Quân nóng quá, chảo của tớ sắp chảy rồi!", "Đỏ rực! Không biết có nướng được thịt không nhỉ?", "Ông ấy đang quát mắng cái cây kìa, tớ sợ quá!"]
+            b1: [
+                "Trời sáng rồi! Mang chảo ra phơi nắng thôi!", "Oa, nắng sớm làm Taco của tớ giòn hơn đấy!", 
+                "Chim đang hót 'Waby Wabo' kìa!", "Nắng lên! Đã đến giờ quang hợp và ăn sáng!",
+                "Khu vườn ban mai thơm mùi sương... và mùi chảo chiên!"
+            ],
+            b2: [
+                "Tối thui! Cậu có mang theo đuốc không?", "Suỵt! Đêm nay tớ nghe thấy tiếng sột soạt... chắc là zombie!", 
+                "Đom đóm bay quanh chậu kìa!", "Sương mù à? Tớ tàng hình trong sương mù đây!",
+                "Cậu rọi đèn pin đi, tớ rọi đường bằng sự điên rồ của mình!"
+            ],
+            b3: [
+                "Oaaaa! Chó bự kìa! Tớ cỡi lên lưng nó được không?", "Bé sói này có thích ăn thịt nướng không nhỉ?", 
+                "Wabo! Sói và Thành là số 1!", "Gâu gâu! Mình thi sủa với sói xem ai to hơn nhé!",
+                "Hình như sói không thích mùi chảo của tớ cho lắm."
+            ],
+            b4: [
+                "Waa! Chú Quân nóng quá, chảo của tớ sắp chảy rồi!", "Đỏ rực! Không biết có nướng được thịt không nhỉ?", 
+                "Ông ấy đang quát mắng cái cây kìa, tớ sợ quá!", "Cứu tớ với, tớ không muốn thành Thành-quay-lu!",
+                "Nhiệt độ này ấp trứng gà chắc chắn nở thành phượng hoàng!"
+            ]
         },
         pots: {
             p1: [
-                "Cái chậu này màu giống hệt bánh nướng!", "Chậu đất nung là số một! Rẻ mà xài tốt!", "Tớ từng đội một cái chậu thế này thay chảo đấy!", "Cậu cẩn thận đừng làm vỡ nó nhé, tớ không có keo dán đâu!", "Đất nung giúp cây dễ thở hơn, giống như tớ mở miệng lúc ngủ vậy!"
+                "Cái chậu này màu giống hệt bánh nướng!", "Chậu đất nung là số một! Rẻ mà xài tốt!", 
+                "Tớ từng đội một cái chậu thế này thay chảo đấy!", "Cậu cẩn thận đừng làm vỡ nó nhé, tớ không có keo dán đâu!", 
+                "Đất nung giúp cây dễ thở hơn, giống như tớ mở miệng lúc ngủ vậy!", "Khoét hai lỗ là có cái mặt nạ xịn luôn!"
             ],
             p2: [
-                "Wabo! Chậu vàng chói mắt quá!", "Cái chậu này mua được bao nhiêu cái bánh Taco nhỉ?", "Vàng thật hay vàng giả thế? Để tớ cắn thử xem!", "Zombie mà thấy chậu này là nó trộm luôn đấy!", "Chậu xịn thế này trồng hoa chắc thành hoa vàng mất!"
+                "Wabo! Chậu vàng chói mắt quá!", "Cái chậu này mua được bao nhiêu cái bánh Taco nhỉ?", 
+                "Vàng thật hay vàng giả thế? Để tớ cắn thử xem!", "Zombie mà thấy chậu này là nó trộm luôn đấy!", 
+                "Chậu xịn thế này trồng hoa chắc thành hoa vàng mất!", "Tớ có nên gõ thử chảo vào chậu xem kêu tiếng gì không?"
             ],
             p3: [
-                "Chậu này có phím bấm à? Gõ thử xem nào!", "Tớ thấy dòng code chạy trên chậu kìa! Nó viết gì thế?", "Nếu tớ gõ W-A-B-O thì chậu có nổ không?", "Chậu điện tử này có chống nước không thế? Tưới vào có giật không?", "Wow, chậu của Coder cơ đấy! Chắc nó tự bắt sâu được!"
+                "Chậu này có phím bấm à? Gõ thử xem nào!", "Tớ thấy dòng code chạy trên chậu kìa! Nó viết gì thế?", 
+                "Nếu tớ gõ W-A-B-O thì chậu có nổ không?", "Chậu điện tử này có chống nước không thế? Tưới vào có giật không?", 
+                "Wow, chậu của Coder cơ đấy! Chắc nó tự bắt sâu được!", "Nó nháy đèn bíp bíp giống cái lò vi sóng nhà tớ!"
             ]
         },
         combos: {
-            b1_p2: ["Wabo! Nắng chiếu vào chậu vàng lấp lánh làm tớ chói cả mắt!", "Buổi sáng và chậu vàng, combo rực rỡ nhất vũ trụ!"],
+            b1_p1: ["Nắng sớm chiếu vào chậu đất nung, trông như chiếc bánh nướng khổng lồ!", "Gió mát, chậu đất, sương mai. Hoàn hảo để cắn một miếng Taco!"],
+            b1_p2: ["Wabo! Nắng chiếu vào chậu vàng lấp lánh làm tớ chói cả mắt!", "Khu vườn thì xanh, chậu thì vàng, chảo của tớ thì bạc! Tỏa sáng rực rỡ!"],
+            b1_p3: ["Đèn LED chậu Coder mờ nhạt trước nắng ban mai, lêu lêu đồ công nghệ!", "Ánh sáng mặt trời sạc pin cho chậu điện tử này đúng không?"],
+            b2_p1: ["Trong đêm tối, chậu đất nung chìm nghỉm luôn. Trốn zombie tốt đấy!", "Tối nay lạnh quá, chậu đất có giữ ấm cho cây không?"],
+            b2_p2: ["Chậu vàng phát sáng giữa rừng đêm! Wabo, cẩn thận thu hút quái vật!", "Vàng lấp lánh dưới trăng, đẹp như cái chảo của tớ lúc mới mua!"],
             b2_p3: ["Ánh đèn LED của chậu Coder thắp sáng cả khu rừng đêm này!", "Chậu điện tử giữa rừng u ám, trông như đĩa bay UFO vậy!"],
             b3_p1: ["Sói có vẻ thích mùi đất nung của cái chậu này đấy!", "Sói bảo vệ chậu đất, chậu đất nuôi cây, tớ thì ăn Taco!"],
-            b4_p2: ["Chậu vàng cũng chảy thành nước dưới cơn giận này mất! Nóng quá!"]
+            b3_p2: ["Bé sói đang soi gương qua cái chậu vàng kìa!", "Tớ cá là con sói muốn cắn thử cái chậu vàng này giống tớ."],
+            b3_p3: ["Sói đang tò mò với mấy dòng code chạy trên chậu kìa!", "Động vật hoang dã gặp công nghệ cao. Wabo, một sự kết hợp kỳ cục!"],
+            b4_p1: ["Lửa giận của bác Quân sẽ nung cái chậu đất này thành gốm sứ cao cấp mất!", "Chậu đất nung chịu nhiệt tốt không? Cứu cái cây với!"],
+            b4_p2: ["Chậu vàng cũng chảy thành nước dưới cơn giận này mất! Nóng quá!", "Chậu vàng phản chiếu ngọn lửa đỏ rực, chói mù mắt tớ rồi!"],
+            b4_p3: ["Nóng quá hỏng mạch điện tử của chậu Coder bây giờ!", "Bác Quân hét to quá làm chậu báo lỗi 'Error 404' luôn kìa!"]
         }
     },
     quan: {
         default: [
             "Thật thảm hại. Ngươi nghĩ vài trang sách có thể đọ lại bộ óc vĩ đại của ta sao?", "Ta đã tính toán được tỷ lệ héo úa... 100% nếu ngươi lười biếng!",
-            "Ngươi gọi đây là 'vườn' sao? Ta gọi đây là 'phòng thí nghiệm thất bại'.", "Ta đang thu thập dữ liệu về sự kém cỏi của ngươi. Rất phong phú!"
+            "Ngươi gọi đây là 'vườn' sao? Ta gọi đây là 'phòng thí nghiệm thất bại'.", "Ta đang thu thập dữ liệu về sự kém cỏi của ngươi. Rất phong phú!",
+            "Phương trình sinh trưởng của cái cây này đang có chiều hướng đi xuống.", "Ngươi không biết phân biệt diệp lục a và diệp lục b à? Kém cỏi!",
+            "Mỗi giây ngươi chần chừ là một lượng ATP bị lãng phí.", "Hãy ghi chép lại mọi thay đổi. Khoa học không có chỗ cho sự phỏng đoán!"
         ],
         bgs: {
-            b1: ["Ánh sáng ban mai hoàn hảo. Phổ quang phổ ở mức tối ưu để quang hợp.", "UV index đang tăng. Ngươi có định che chắn cho thí nghiệm không?"],
-            b2: ["Bóng tối. Không có ánh sáng, pha tối của quang hợp sẽ sớm dừng lại.", "Ta cần bật đèn pha 10.000 lumen. Tối quá!"],
-            b3: ["Một cá thể Canis lupus? Ai cho phép mang dã thú vào phòng thí nghiệm?", "Đừng để con sói đó cắn nát mẫu vật thực vật của ta!"],
-            b4: ["SỰ KÉM CỎI CỦA NGƯƠI ĐÃ VƯỢT QUÁ GIỚI HẠN CHỊU ĐỰNG CỦA TA!", "TẤT CẢ SẼ BỊ THIÊU RỤI BỞI TRÍ TUỆ CỦA TA!", "CÚT ĐI! ĐỪNG LÀM BẨN TẦM NHÌN CỦA TA NỮA!"]
+            b1: [
+                "Ánh sáng ban mai hoàn hảo. Phổ quang phổ ở mức tối ưu để quang hợp.", "UV index đang tăng. Ngươi có định che chắn cho thí nghiệm không?",
+                "Đây là thời điểm quá trình mở khí khổng diễn ra mạnh nhất. Đừng làm hỏng nó.", "Quang chu kỳ bắt đầu. Bắt tay vào việc đi đồ lười biếng!"
+            ],
+            b2: [
+                "Bóng tối. Không có ánh sáng, pha tối của quang hợp sẽ sớm dừng lại.", "Ta cần bật đèn pha 10.000 lumen. Tối quá!",
+                "Sự hô hấp tế bào đang chiếm ưu thế. Môi trường này quá thiếu dữ liệu.", "Rừng đêm nhiều độ ẩm, cẩn thận nấm mốc tiêu diệt mẫu vật."
+            ],
+            b3: [
+                "Một cá thể Canis lupus? Ai cho phép mang dã thú vào phòng thí nghiệm?", "Đừng để con sói đó cắn nát mẫu vật thực vật của ta!",
+                "Hệ sinh thái này đang mất cân bằng vì sự xuất hiện của kẻ săn mồi.", "Mùi lông thú làm nhiễu loạn các cảm biến hóa học của ta."
+            ],
+            b4: [
+                "SỰ KÉM CỎI CỦA NGƯƠI ĐÃ VƯỢT QUÁ GIỚI HẠN CHỊU ĐỰNG CỦA TA!", "TẤT CẢ SẼ BỊ THIÊU RỤI BỞI TRÍ TUỆ CỦA TA!", 
+                "CÚT ĐI! ĐỪNG LÀM BẨN TẦM NHÌN CỦA TA NỮA!", "SỰ NGU NGỐC CỦA NGƯƠI LÀM TA TĂNG HUYẾT ÁP VÀ ADRENALINE!"
+            ]
         },
         pots: {
             p1: [
-                "Chậu đất nung rẻ tiền. Không có gì đáng để phân tích.", "Ngươi định ươm mầm sự vĩ đại trong cái bình gốm tầm thường này sao?", "Tính thẩm mỹ là con số không, nhưng tính thực dụng thì tạm chấp nhận.", "Đất nung có độ xốp, giúp thoát nước. Ít ra ngươi không quá ngu ngốc."
+                "Chậu đất nung rẻ tiền. Không có gì đáng để phân tích.", "Ngươi định ươm mầm sự vĩ đại trong cái bình gốm tầm thường này sao?", 
+                "Tính thẩm mỹ là con số không, nhưng tính thực dụng thì tạm chấp nhận.", "Đất nung có độ xốp, giúp thoát nước. Ít ra ngươi không quá ngu ngốc.",
+                "Thành phần silicat và alumin trong đất sét này quá kém chất lượng."
             ],
             p2: [
-                "Vàng là chất dẫn điện tốt, nhưng làm chậu thì thật phô trương.", "Ngươi tưởng vàng có thể tăng tốc độ quang hợp sao? Ngu xuẩn.", "Kẻ ngốc mới đem kim loại quý đi đựng đất bùn.", "Au - Khối lượng riêng 19.3 g/cm³. Khá nặng đấy, đừng để rớt trúng chân."
+                "Vàng là chất dẫn điện tốt, nhưng làm chậu thì thật phô trương.", "Ngươi tưởng vàng có thể tăng tốc độ quang hợp sao? Ngu xuẩn.", 
+                "Kẻ ngốc mới đem kim loại quý đi đựng đất bùn.", "Au - Khối lượng riêng 19.3 g/cm³. Khá nặng đấy, đừng để rớt trúng chân.",
+                "Tỷ lệ bức xạ nhiệt của vàng sẽ làm rễ cây bị nướng chín. Chờ mà xem."
             ],
             p3: [
-                "Mã code trên chậu này thật sơ sài. Ta có thể viết hay hơn nghìn lần.", "Ta có thể hack cái chậu này trong 3 giây. Nhưng ta không rảnh.", "Cuối cùng cũng có một thiết bị xứng tầm trí tuệ của ta... một chút.", "Hệ thống đèn LED có vẻ đồng bộ. Ai thiết kế nó vậy? Chắc không phải ngươi."
+                "Mã code trên chậu này thật sơ sài. Ta có thể viết hay hơn nghìn lần.", "Ta có thể hack cái chậu này trong 3 giây. Nhưng ta không rảnh.", 
+                "Cuối cùng cũng có một thiết bị xứng tầm trí tuệ của ta... một chút.", "Hệ thống đèn LED có vẻ đồng bộ. Ai thiết kế nó vậy? Chắc không phải ngươi.",
+                "Bảng mạch đang gặp trục trặc do độ ẩm. Công nghệ của các ngươi thật yếu ớt."
             ]
         },
         combos: {
-            b1_p2: ["Ánh phản xạ cực đại. Ta phải đeo kính bảo hộ vì sự kết hợp chói loà và lố bịch này."],
-            b2_p3: ["Khá khen cho hệ thống đèn LED của chậu Coder đang cung cấp một lượng quang phổ nhỏ giữa đêm."],
-            b3_p1: ["Sinh vật hoang dã và vật chứa nguyên thủy. Một phương trình sinh thái cơ bản hoàn chỉnh."],
-            b4_p3: ["LỖI HỆ THỐNG! NGAY CẢ CÁI CHẬU NÀY CŨNG ĐANG CHẾ NHẠO TA SAO?!"]
+            b1_p1: ["Môi trường tiêu chuẩn, công cụ tiêu chuẩn. Nếu thất bại, lỗi 100% là do năng lực của ngươi.", "Quá trình thoát hơi nước qua chậu đất nung dưới nắng sáng đang ở mức ổn định."],
+            b1_p2: ["Ánh phản xạ cực đại. Ta phải đeo kính bảo hộ vì sự kết hợp chói loà và lố bịch này.", "Tia nắng hắt vào vàng. Sự lãng phí vật lý quang học tột cùng."],
+            b1_p3: ["Mang hệ thống đèn LED ra phơi nắng? Ngươi không hiểu khái niệm 'thừa thãi' à?", "Cảm biến quang học của chậu đang bị nhiễu do ánh sáng mặt trời mạnh."],
+            b2_p1: ["Nhiệt độ giảm. Chậu đất nung không có khả năng giữ nhiệt. Cây sẽ stress lạnh.", "Mọi thứ nguyên thủy đến phát chán. Một thí nghiệm tẻ nhạt trong bóng tối."],
+            b2_p2: ["Khoe khoang tài sản giữa rừng khuya? Ngươi không chỉ kém cỏi mà còn thiếu kiến thức sinh tồn.", "Kim loại lạnh nhanh hơn trong đêm. Ngươi đang giết rễ cây đấy."],
+            b2_p3: ["Khá khen cho hệ thống đèn LED của chậu Coder đang cung cấp một lượng quang phổ nhỏ giữa đêm.", "Cuối cùng mạch điện tử này cũng có đất dụng võ trong môi trường thiếu sáng."],
+            b3_p1: ["Sinh vật hoang dã và vật chứa nguyên thủy. Một phương trình sinh thái cơ bản hoàn chỉnh.", "Hãy xua con sói ra xa, nó sẽ đạp vỡ cái chậu rẻ tiền này mất."],
+            b3_p2: ["Cẩn thận! Loài canoid có xu hướng đánh dấu lãnh thổ lên những vật thể nổi bật như chậu vàng này.", "Sự xa hoa vô nghĩa lọt vào tầm ngắm của dã thú."],
+            b3_p3: ["Sóng âm từ linh kiện điện tử có thể kích động thính giác của con sói. Tắt đi!", "Một phòng thí nghiệm hỗn loạn: Thú hoang và vi mạch."],
+            b4_p1: ["SỨC NÓNG NÀY SẼ NUNG CHÍN CẢ CHẬU ĐẤT LẪN CÁI CÂY TRONG ĐÓ!", "NGƯƠI LÀM TA GIẬN ĐẾN MỨC MUỐN ĐẬP NÁT CÁI CHẬU GỐM NÀY!"],
+            b4_p2: ["VÀNG CŨNG PHẢI TAN CHẢY TRƯỚC SỰ PHẪN NỘ VỀ MẶT HỌC THUẬT CỦA TA!", "KẺ NGU NGỐC KHOE KHOANG SẼ BỊ THIÊU RỤI TRƯỚC!"],
+            b4_p3: ["LỖI HỆ THỐNG! NGAY CẢ CÁI CHẬU NÀY CŨNG ĐANG CHẾ NHẠO TA SAO?!", "TA SẼ XÓA SẠCH MỌI DỮ LIỆU CỦA NGƯƠI LẪN CÁI CHẬU CODE NÀY!"]
         }
     },
     quyen: {
         default: [
             "...", "Sự tĩnh lặng là một món quà. Đừng phá vỡ nó.", "Ta chuộng bóng tối hơn những lời sáo rỗng.", 
-            "Gieo hạt đi. Một mầm sống cô độc bắt đầu.", "Mỗi cuốn sách là một thế giới cô lập. Ta thích chìm vào đó."
+            "Gieo hạt đi. Một mầm sống cô độc bắt đầu.", "Mỗi cuốn sách là một thế giới cô lập. Ta thích chìm vào đó.",
+            "Từng chiếc lá rơi... tựa như dòng thời gian trôi tuột qua kẽ tay.", "Hãy để ta yên. Đám đông chỉ làm nhiễu loạn tâm trí.",
+            "Nghệ thuật sinh ra từ sự dằn vặt và nỗi cô đơn sâu thẳm."
         ],
         bgs: {
-            b1: ["Ban mai... quá nhiều ánh sáng. Nó làm ta nhức mắt.", "Tiếng ồn của buổi sáng phá hỏng thiết kế tĩnh lặng của ta."],
-            b2: ["Rừng đêm... Nơi ta thuộc về.", "Bóng tối bao trùm. Mọi đường nét đều trở nên tinh tế."],
-            b3: ["Bạn của ta. Chúng ta thuộc về nhau.", "Con sói này hiểu sự tĩnh lặng tốt hơn bất kỳ con người nào."],
-            b4: ["Ngọn lửa của sự tức giận chỉ thiêu rụi chính người mang nó.", "Ồn ào. Ta cần bóng tối.", "Một kẻ thông minh nhưng không biết kiểm soát cảm xúc."]
+            b1: [
+                "Ban mai... quá nhiều ánh sáng. Nó làm ta nhức mắt.", "Tiếng ồn của buổi sáng phá hỏng thiết kế tĩnh lặng của ta.",
+                "Ngày mới bắt đầu, kéo theo những lo toan trần tục. Ta không thích.", "Những tia nắng giả tạo xua tan bóng đen nghệ thuật của ta."
+            ],
+            b2: [
+                "Rừng đêm... Nơi ta thuộc về.", "Bóng tối bao trùm. Mọi đường nét đều trở nên tinh tế.",
+                "Yên bình làm sao. Chỉ có ta, cái cây, và sự tĩnh mịch của vũ trụ.", "Đây là lúc những bản thiết kế chân thật nhất thành hình."
+            ],
+            b3: [
+                "Bạn của ta. Chúng ta thuộc về nhau.", "Con sói này hiểu sự tĩnh lặng tốt hơn bất kỳ con người nào.",
+                "Chỉ những kẻ mang tâm hồn đầy vết xước mới có thể đứng cạnh nhau.", "Một cái bóng đơn độc đồng hành cùng một con thú hoang."
+            ],
+            b4: [
+                "Ngọn lửa của sự tức giận chỉ thiêu rụi chính người mang nó.", "Ồn ào. Ta cần bóng tối.", 
+                "Một kẻ thông minh nhưng không biết kiểm soát cảm xúc.", "Sự phẫn nộ phá vỡ mọi bố cục thẩm mỹ."
+            ]
         },
         pots: {
             p1: [
-                "Sự nguyên thủy. Ta thích nó.", "Không màu mè, chỉ là đất và mầm sống.", "Chậu đất nung thấm hút mồ hôi của tự nhiên.", "Quay về với cát bụi. Đó là định mệnh của mọi sinh vật.", "Đơn giản là đỉnh cao của sự tinh tế."
+                "Sự nguyên thủy. Ta thích nó.", "Không màu mè, chỉ là đất và mầm sống.", "Chậu đất nung thấm hút mồ hôi của tự nhiên.", 
+                "Quay về với cát bụi. Đó là định mệnh của mọi sinh vật.", "Đơn giản là đỉnh cao của sự tinh tế. Màu của sự hoang tàn."
             ],
             p2: [
-                "Sự lấp lánh giả tạo. Ta không ưa.", "Vàng không làm cái chết trở nên đẹp đẽ hơn.", "Quá chói lọi cho sự cô độc của ta.", "Một chiếc lồng vàng cho một linh hồn tự do. Thật trớ trêu.", "Sự xa hoa vô nghĩa giữa vòng xoáy sinh tử."
+                "Sự lấp lánh giả tạo. Ta không ưa.", "Vàng không làm cái chết trở nên đẹp đẽ hơn.", "Quá chói lọi cho sự cô độc của ta.", 
+                "Một chiếc lồng vàng cho một linh hồn tự do. Thật trớ trêu.", "Sự xa hoa vô nghĩa giữa vòng xoáy sinh tử."
             ],
             p3: [
-                "Ánh sáng xanh điện tử... lạnh lẽo.", "Máy móc cũng biết cô đơn sao?", "Những dòng code chạy vô tận, như một vòng lặp không lối thoát.", "Sự sống hữu cơ bị nhốt trong một nhà tù thuật toán.", "Ta nghe thấy tiếng bíp tĩnh lặng của linh kiện điện tử."
+                "Ánh sáng xanh điện tử... lạnh lẽo.", "Máy móc cũng biết cô đơn sao?", "Những dòng code chạy vô tận, như một vòng lặp không lối thoát.", 
+                "Sự sống hữu cơ bị nhốt trong một nhà tù thuật toán.", "Ta nghe thấy tiếng bíp tĩnh lặng của linh kiện điện tử. Buồn bã lạ thường."
             ]
         },
         combos: {
-            b1_p2: ["Sự phô trương của vàng hòa cùng sự chói lóa của bình minh. Một bức tranh nhức mắt."],
-            b2_p3: ["Giữa rừng u tối, ánh điện tử lập lòe như những linh hồn nhân tạo đi lạc."],
-            b3_p1: ["Sói của ta gác bên chậu đất cằn cỗi. Một vẻ đẹp u sầu tuyệt mỹ."],
-            b4_p1: ["Đất nung không cháy, nhưng ngọn lửa điên rồ của hắn sẽ làm nó nứt vỡ."]
+            b1_p1: ["Ánh bình minh soi rõ những vết nứt trên chậu gốm. Nét đẹp của sự không hoàn hảo.", "Bắt đầu một vòng lặp nhạt nhẽo của tự nhiên."],
+            b1_p2: ["Sự phô trương của vàng hòa cùng sự chói lóa của bình minh. Một bức tranh nhức mắt.", "Lóa mắt. Đưa ta về với bóng tối."],
+            b1_p3: ["Màn hình điện tử mờ đi dưới nắng. Sự bất lực của nhân tạo trước tự nhiên.", "Code không thể chạy trốn khỏi thực tại sáng rõ."],
+            b2_p1: ["Chậu đất hòa mình vào màn đêm. Sự vô danh tuyệt mỹ.", "Bóng tối ôm lấy mầm sống nguyên sơ. Ta thấy đồng cảm."],
+            b2_p2: ["Giữa vực thẳm u tối, khối vàng vẫn cố chấp tỏa sáng. Nỗ lực trong vô vọng.", "Sự giàu có vô nghĩa giữa rừng sâu tĩnh mịch."],
+            b2_p3: ["Giữa rừng u tối, ánh điện tử lập lòe như những linh hồn nhân tạo đi lạc.", "Một đoạn code nhấp nháy, cô độc như vì sao xa xăm."],
+            b3_p1: ["Sói của ta gác bên chậu đất cằn cỗi. Một vẻ đẹp u sầu tuyệt mỹ.", "Thiên nhiên hoang dã. Không giả tạo, không tô vẽ."],
+            b3_p2: ["Con thú hoang không màng đến giá trị của vàng. Khinh bỉ sự phù phiếm.", "Bạn ta thà ngắm trăng còn hơn nhìn khối kim loại vô tri này."],
+            b3_p3: ["Tiếng máy móc làm xáo trộn bản năng của bầy sói.", "Con sói nhìn chằm chằm vào ánh sáng LED. Hai sự cô đơn khác biệt."],
+            b4_p1: ["Đất nung không cháy, nhưng ngọn lửa điên rồ của hắn sẽ làm nó nứt vỡ.", "Hủy diệt. Đó là kết cục mà kẻ điên kia mang lại."],
+            b4_p2: ["Vàng chảy ra, phơi bày sự biến dạng dưới ngọn lửa cuồng nộ.", "Sự xa hoa tan biến trong chớp mắt."],
+            b4_p3: ["Mạch điện chập cháy. Ngay cả sự logic cũng sụp đổ trước cơn thịnh nộ.", "Một mớ hỗn độn ồn ào và vô nghĩa."]
+        }
+    },
+    tuchill: {
+        default: [
+            "Cứ bình tĩnh thôi, việc gì phải vội?", "Một tách trà, một cuốn sách, thế là đủ cho một ngày chill.",
+            "Cây cũng như mình thôi, thong thả thì mới bền.", "Hôm nay bạn thấy ổn chứ? Đừng quên mỉm cười một cái nhé.",
+            "Thế giới ngoài kia ồn ào quá, vào đây nghe tiếng lá rơi với mình đi.", "Đừng áp lực quá, quan trọng là bạn đã bắt đầu mà, đúng không?",
+            "Việc nay chưa xong thì mai làm, cây nay chưa lớn thì mai lớn. Chill đi.", "Bạn có đang hít thở sâu không đấy? Thả lỏng vai ra nào.",
+            "Mọi chuyện rồi sẽ ổn thôi, giống như hạt mầm rồi sẽ nảy lộc ấy."
+        ],
+        bgs: {
+            b1: [
+                "Nắng sớm đẹp thật đấy, rất hợp để ngồi thiền.", "Chào buổi sáng! Cảm giác như cả thế giới đang thức dậy cùng mình.",
+                "Vươn vai một cái đón gió sáng nào. Đời nhẹ tênh.", "Không khí trong vắt. Ly cà phê sáng ở đây thì tuyệt cú mèo."
+            ],
+            b2: [
+                "Trăng đêm nay tròn ghê. Yên tĩnh thật sự.", "Bóng tối không đáng sợ đâu, nó giúp mình thấy rõ ánh sao hơn.",
+                "Nghe tiếng dế kêu không? Khúc nhạc ru ngủ của thiên nhiên đấy.", "Đêm xuống rồi, gác lại âu lo và nghỉ ngơi thôi bạn."
+            ],
+            b3: [
+                "Bé sói này trông ngầu đấy, nhưng mình thấy nó cũng chill phết.", "Sói cũng cần nghỉ ngơi, bạn cũng vậy. Cứ nằm ườn ra đi.",
+                "Lông nó có vẻ mượt. Giá mà được vuốt một cái nhỉ.", "Người anh em Quyền nuôi pet cá tính đấy, nhưng nó ngồi im thì cũng hiền."
+            ],
+            b4: [
+                "Wow, bác Quân có vẻ đang 'nóng' quá nhỉ? Thôi mình cứ kệ bác ấy, mình chill tiếp.", "Nóng giận hại gan lắm bác ơi. Uống trà tim sen cho hạ hỏa nào.",
+                "Khí thế bừng bừng thế này không hợp với vibe của mình lắm.", "Căng căng, chỗ này đang hơi căng. Mình lui ra góc đọc sách nhé."
+            ]
+        },
+        pots: {
+            p1: [
+                "Chậu đất mộc mạc thế này là mình thích nhất.", "Đơn giản là nhất, cậu thấy đúng không?",
+                "Sờ vào vân đất thô ráp thấy bình yên lạ thường.", "Nước sơn xịn đến mấy cũng không qua được sự tự nhiên này."
+            ],
+            p2: [
+                "Vàng bạc cũng chỉ là vật ngoài thân thôi, quan trọng là cái cây bên trong ấy.", "Chậu sáng quá, đeo kính râm vào chill cho đỡ chói mắt.",
+                "Trồng cây trong chậu này áp lực phết nhỉ, sợ xước. Cứ thong thả thôi.", "Đẹp thì có đẹp, nhưng mình vẫn ưng sự giản dị hơn."
+            ],
+            p3: [
+                "Công nghệ cũng hay, nhưng đừng quên dành thời gian cho thiên nhiên thực sự nhé.", "Bấm tạch tạch nghe cũng vui tai. Nhưng thà nghe tiếng chim hót còn hơn.",
+                "Chậu thông minh thì mình đỡ phải nhớ lịch tưới nước. Quá hợp cho hệ người lười!", "Hiện đại hóa nông nghiệp à? Thú vị đấy."
+            ]
+        },
+        combos: {
+            b1_p1: ["Nắng sớm trên chậu đất... nhìn bình yên đến lạ.", "Khung cảnh hoàn hảo cho một buổi sáng thiền định."],
+            b1_p2: ["Nắng hắt vào vàng lóa cả mắt. Mở nhạc lofi lên nghe cho át đi sự chói chang nào.", "Một buổi sáng rực rỡ và giàu có. Cũng được."],
+            b1_p3: ["Vừa có nắng tự nhiên vừa có ánh sáng LED. Cái cây này sướng nhất rồi.", "Chill buổi sáng cùng đồ công nghệ. Vibe của thời đại mới."],
+            b2_p1: ["Chậu đất lẫn vào màn đêm. Không bon chen, không ồn ào. Đúng ý mình.", "Yên bình quá. Thêm tách trà nóng nữa là đủ bộ."],
+            b2_p2: ["Vàng rực lên trong đêm tối. Hơi nổi bật quá, nhưng thôi kệ.", "Ánh trăng phản chiếu lên thành chậu. Nhìn cũng nên thơ phết."],
+            b2_p3: ["Ánh đèn LED giữa rừng đêm, trông như một buổi tiệc nhỏ vậy.", "Không cần đèn ngủ nữa, cái chậu này lo hết rồi."],
+            b3_p1: ["Chậu đất, chó sói, rừng cây. Về với thiên nhiên hoang dã là đây.", "Sói cứ gác, mình cứ chill. Nước sông không phạm nước giếng."],
+            b3_p2: ["Không biết sói có bị ánh vàng làm chói mắt không nhỉ?", "Sự sang chảnh bên cạnh sự hoang dã. Chênh lệch phết."],
+            b3_p3: ["Sói có vẻ hợp với ánh đèn LED này đấy chứ.", "Công nghệ cao và động vật hoang dã. Cùng nhau chill thôi."],
+            b4_p1: ["Bác Quân hét to làm rung cả chậu đất kìa. Thôi mình đi chỗ khác.", "Đất nung gặp lửa giận. Khô hạn quá, rót ly nước lọc uống cho mát."],
+            b4_p2: ["Chậu vàng hấp thụ nhiệt kinh lắm. Đứng gần bỏng rát cả người. Chuồn lẹ!", "Sự tức giận làm lu mờ cả vẻ đẹp của vàng bạc."],
+            b4_p3: ["Nóng quá coi chừng chập mạch nha bác Quân ơi. Chill đi!", "Bác ấy mắng cả cái chậu điện tử. Máy móc có tội tình gì đâu."]
         }
     }
 };
@@ -106,6 +247,9 @@ const DRAMATIC_DEATH_MESSAGES = {
     },
     thanh: {
         overwatered: "Raaaawr! Cây khát NƯỚC! Chứ không cần một cái Taco-Tsunami hương vị ngập úng! Nhìn nó xem, nó sũng nước rồi! Wabo!"
+    },
+    tuchill: {
+        overwatered: "Ôi bạn ơi, bạn quan tâm quá đà rồi. Cái cây nó cần thở chứ không cần đi bơi... Thôi, coi như là một bài học thong thả nhé."
     }
 };
 
@@ -121,7 +265,8 @@ const ITEM_DB = {
     'w1': { name: 'Bình Nước', img: 'Img/nuoc.png', type: 'tool' },
     'f1': { name: 'Phân Bón', img: 'Img/phanbon.png', type: 'tool' },
     'c1': { name: 'Dr.Minh Quân', img: 'Img/DrMinhQuan.png', type: 'character' },
-    'c2': { name: 'Quyền Cô Độc', img: 'Img/MinhQuyen.png', type: 'character' } 
+    'c2': { name: 'Quyền Cô Độc', img: 'Img/MinhQuyen.png', type: 'character' },
+    'c3': { name: 'TuChillGuy', img: 'Img/TuChillGuy.png', type: 'character' } 
 };
 
 // === HÀM RANDOM THOẠI TỔNG HỢP ===
@@ -162,6 +307,7 @@ function getCharacterQuote(charType, bgImg, potImg) {
 function getCurrentCharType() {
     if (userData.equippedChar === 'c1') return 'quan';
     if (userData.equippedChar === 'c2') return 'quyen';
+    if (userData.equippedChar === 'c3') return 'tuchill';
     return 'thanh';
 }
 
@@ -305,12 +451,14 @@ function setupCharacter() {
     
     if (charType === 'quan') charImg.src = 'Img/DrMinhQuan.png';
     else if (charType === 'quyen') charImg.src = 'Img/MinhQuyen.png';
+    else if (charType === 'tuchill') charImg.src = 'Img/TuChillGuy.png';
     else charImg.src = 'Img/crazy_thanh.png';
 
     charImg.onclick = () => {
         if (userData.plantState === 'dead') {
             let deadMsg = charType === 'quan' ? "Thí nghiệm thất bại. Một cái xác khô." : 
-                          (charType === 'quyen' ? "Cái chết là sự giải thoát trong im lặng." : "Cây đã chết úng mất rồi wabo...");
+                          (charType === 'quyen' ? "Cái chết là sự giải thoát trong im lặng." : 
+                          (charType === 'tuchill' ? "Nó ngủ hơi sâu rồi... bạn trồng lại cây mới nhé." : "Cây đã chết úng mất rồi wabo..."));
             updateThanhSpeech(deadMsg, "error");
         } else if (userData.plantedSeed) {
             const currentBg = userData.equippedBg || 'Img/AnhBackGroundGarden.png';
@@ -319,7 +467,8 @@ function setupCharacter() {
             updateThanhSpeech(randomQuote, "success");
         } else {
             let emptyMsg = charType === 'quan' ? "Thùng rỗng kêu to, chậu không gieo hạt. Gieo đi!" : 
-                          (charType === 'quyen' ? "Khoảng trống. Đợi một hạt giống được gieo xuống." : "Cậu chọn hạt giống đi nào");
+                          (charType === 'quyen' ? "Khoảng trống. Đợi một hạt giống được gieo xuống." : 
+                          (charType === 'tuchill' ? "Chậu đang trống kìa, bạn gieo một hạt giống đi cho vui nhà vui cửa." : "Cậu chọn hạt giống đi nào"));
             updateThanhSpeech(emptyMsg, "warning");
         }
     };
@@ -422,7 +571,8 @@ function initCareActions() {
 
             if (userData.plantState === 'dead') {
                 let msg = charType === 'quan' ? "Ngu ngốc! Ngươi đã dìm chết nó rồi. Nhổ đi!" : 
-                         (charType === 'quyen' ? "Tàn lụi rồi... Vòng lặp của tự nhiên." : "Waaaa! Cây chết úng rồi cậu nhổ lên trồng lại đi!");
+                         (charType === 'quyen' ? "Tàn lụi rồi... Vòng lặp của tự nhiên." : 
+                         (charType === 'tuchill' ? "Nó ngủ sâu quá rồi, bạn nhổ lên trồng cây mới cho vui nhé." : "Waaaa! Cây chết úng rồi cậu nhổ lên trồng lại đi!"));
                 updateThanhSpeech(msg, "error");
                 return;
             }
@@ -451,7 +601,8 @@ function initCareActions() {
                     renderInventoryUI();
                     
                     let msg = charType === 'quan' ? "Cây đã thối rữa vì ngươi tưới quá tay! Nhổ bỏ đi!" : 
-                             (charType === 'quyen' ? "Sự sống đã chìm nghỉm trong sai lầm của ngươi." : "Wabo... Cây đã chết úng vì tưới quá tay rồi!");
+                             (charType === 'quyen' ? "Sự sống đã chìm nghỉm trong sai lầm của ngươi." : 
+                             (charType === 'tuchill' ? "Thôi xong, cây bơi ngửa luôn rồi... nhổ đi trồng lại thôi." : "Wabo... Cây đã chết úng vì tưới quá tay rồi!"));
                     updateThanhSpeech(msg, "error");
                     
                     updateDoc(doc(db, "users", currentUser.uid), updatePayload).catch(e => console.error(e));
@@ -481,7 +632,8 @@ function initCareActions() {
                 renderInventoryUI();
                 
                 let msg = charType === 'quan' ? "Dừng lại đồ phá hoại! Ngươi tính biến chậu cây thành bể bơi à?" : 
-                         (charType === 'quyen' ? "Nó đang chới với trong nước... giống như một kẻ lạc lõng." : "Waby wabo! Dừng lại! Cây sắp bơi trong chậu luôn rồi kìa!");
+                         (charType === 'quyen' ? "Nó đang chới với trong nước... giống như một kẻ lạc lõng." : 
+                         (charType === 'tuchill' ? "Úi úi, ngập rồi bạn ơi! Dừng tưới nha, cây nó nghẹt thở mất." : "Waby wabo! Dừng lại! Cây sắp bơi trong chậu luôn rồi kìa!"));
                 updateThanhSpeech(msg, "error");
 
                 updateDoc(doc(db, "users", currentUser.uid), {
@@ -494,7 +646,8 @@ function initCareActions() {
                 renderInventoryUI();
                 
                 let waterMsg = charType === 'quan' ? "Ngươi tưới nước được rồi đấy. Tiếp tục phát huy đi." : 
-                               (charType === 'quyen' ? "Tưới nước đi... đừng để sự tĩnh lặng này biến thành cái chết." : "Waby wabo! Cảm ơn cậu đã tưới nước, cây trông tươi tắn lắm!");
+                               (charType === 'quyen' ? "Tưới nước đi... đừng để sự tĩnh lặng này biến thành cái chết." : 
+                               (charType === 'tuchill' ? "Cây được uống nước mát rồi kìa, nhìn tươi hẳn ra." : "Waby wabo! Cảm ơn cậu đã tưới nước, cây trông tươi tắn lắm!"));
                 updateThanhSpeech(waterMsg, "success");
 
                 updateDoc(doc(db, "users", currentUser.uid), {
@@ -518,7 +671,8 @@ function initCareActions() {
 
             if (userData.plantState === 'dead') {
                 let msg = charType === 'quan' ? "Cây chết rồi, phân bón không có tác dụng hồi sinh đâu!" : 
-                         (charType === 'quyen' ? "Tàn tro không thể sống lại bằng phân bón." : "Waaaa... Cây chết rồi bón phân cũng vô ích thôi.");
+                         (charType === 'quyen' ? "Tàn tro không thể sống lại bằng phân bón." : 
+                         (charType === 'tuchill' ? "Nó ngủ ngoan rồi, phân bón giờ không kịp nữa đâu bạn." : "Waaaa... Cây chết rồi bón phân cũng vô ích thôi."));
                 updateThanhSpeech(msg, "error");
                 return;
             }
@@ -526,14 +680,16 @@ function initCareActions() {
             const todayStr = new Date().toLocaleDateString('vi-VN');
             if (userData.lastFertilizerDateStr === todayStr) {
                 let warnMsg = charType === 'quan' ? "Bộ não ngươi bị chậm à? Bón phân 1 ngày 1 lần thôi!" : 
-                               (charType === 'quyen' ? "Hấp tấp không mang lại kết quả. Hôm nay đủ rồi." : "Hôm nay cậu đã bón phân rồi mỗi ngày chỉ 1 lần thôi nhé");
+                               (charType === 'quyen' ? "Hấp tấp không mang lại kết quả. Hôm nay đủ rồi." : 
+                               (charType === 'tuchill' ? "Nay nó ăn no rồi, cứ thong thả mai bón tiếp nhé." : "Hôm nay cậu đã bón phân rồi mỗi ngày chỉ 1 lần thôi nhé"));
                 updateThanhSpeech(warnMsg, "warning");
                 return;
             }
 
             if (userData.fertilizerTime) {
                 let msg = charType === 'quan' ? "Ngươi không biết cơ chế hấp thụ à? Nó đang quá tải dinh dưỡng rồi đấy!" : 
-                         (charType === 'quyen' ? "Cây đang hấp thụ. Đừng làm phiền quá trình của nó." : "Burb! Cây đang tiêu hóa phân bón đợt trước, đợi chút nhé!");
+                         (charType === 'quyen' ? "Cây đang hấp thụ. Đừng làm phiền quá trình của nó." : 
+                         (charType === 'tuchill' ? "Từ từ thôi, để cây nó tiêu hóa phân bón cũ đã nào." : "Burb! Cây đang tiêu hóa phân bón đợt trước, đợi chút nhé!"));
                 updateThanhSpeech(msg, "warning");
                 return;
             }
@@ -545,7 +701,8 @@ function initCareActions() {
             renderInventoryUI();
             
             let fertMsg = charType === 'quan' ? "Đã bón phân. Hãy xem công trình quang hợp vĩ đang diễn ra đi!" : 
-                         (charType === 'quyen' ? "Dinh dưỡng hòa vào đất. Sự phát triển diễn ra trong im lặng." : "Đã bón phân! Sao cây không lớn nhỉ?. Ogga bogga!");
+                         (charType === 'quyen' ? "Dinh dưỡng hòa vào đất. Sự phát triển diễn ra trong im lặng." : 
+                         (charType === 'tuchill' ? "Ăn no chóng lớn nhé cây ơi, mình chill chờ cây nở hoa." : "Đã bón phân! Sao cây không lớn nhỉ?. Ogga bogga!"));
             updateThanhSpeech(fertMsg, "success");
             updateDoc(doc(db, "users", currentUser.uid), {
                 phanbon: userData.phanbon,
@@ -653,18 +810,22 @@ function startThanhAutoTalk() {
                 if (needsWater || needsFertilizer) {
                     if (lastReminderWasCare) {
                         msg = charType === 'quan' ? "Bấm vào chậu đi, ta không nhắc lại lần hai đâu!" : 
-                             (charType === 'quyen' ? "Chăm sóc nó đi. Đừng để ta phải lên tiếng." : "Hãy thử bấm vào chậu đi Wabo!");
+                             (charType === 'quyen' ? "Chăm sóc nó đi. Đừng để ta phải lên tiếng." : 
+                             (charType === 'tuchill' ? "Này, ngó qua cái chậu xíu nha, cây nó réo kìa." : "Hãy thử bấm vào chậu đi Wabo!"));
                         lastReminderWasCare = false;
                     } else {
                         if (needsWater && needsFertilizer) {
                             msg = charType === 'quan' ? "Ngươi định giết cái cây này bằng sự thiếu hụt cả nước lẫn phân bón sao?" : 
-                                 (charType === 'quyen' ? "Sự sống đang kiệt quệ dần. Nó cần nước và dinh dưỡng." : "Raawr! Cây khát nước và đói phân bón kìa!");
+                                 (charType === 'quyen' ? "Sự sống đang kiệt quệ dần. Nó cần nước và dinh dưỡng." : 
+                                 (charType === 'tuchill' ? "Cây đói với khát lả rồi, bạn chăm nó tí đi." : "Raawr! Cây khát nước và đói phân bón kìa!"));
                         } else if (needsWater) {
                             msg = charType === 'quan' ? "Cây đang thiếu H2O. Tưới nó ngay!" : 
-                                 (charType === 'quyen' ? "Đất đang khô cằn. Cho nó một chút sự sống đi." : "Cây đang cần nước đấy cậu tưới cho nó đi!");
+                                 (charType === 'quyen' ? "Đất đang khô cằn. Cho nó một chút sự sống đi." : 
+                                 (charType === 'tuchill' ? "Hình như cây đang khát, bạn cho nó xin tí nước cho mát nhé?" : "Cây đang cần nước đấy cậu tưới cho nó đi!"));
                         } else if (needsFertilizer) {
                             msg = charType === 'quan' ? "Kém cỏi. Vào Thư Viện đọc sách kiếm phân bón ngay!" : 
-                                 (charType === 'quyen' ? "Tới Thư Viện mang phân bón về. Cây cần nuôi dưỡng." : "Cậu vào Thư Viện kiếm phân bón cho cây mau lớn nhé!");
+                                 (charType === 'quyen' ? "Tới Thư Viện mang phân bón về. Cây cần nuôi dưỡng." : 
+                                 (charType === 'tuchill' ? "Rảnh thì dạo Thư Viện tí kiếm phân bón cho cây lớn nha." : "Cậu vào Thư Viện kiếm phân bón cho cây mau lớn nhé!"));
                         }
                         lastReminderWasCare = true;
                     }
@@ -732,7 +893,8 @@ function updateGardenVisuals() {
         if (userData.plantState === 'dead') {
             if (centerPot) centerPot.classList.add('dead-plant');
             currentLabel = charType === 'quan' ? "Thí nghiệm thất bại. Một cái xác khô." : 
-                          (charType === 'quyen' ? "Cái chết là sự giải thoát trong im lặng." : "Cây đã chết úng mất rồi wabo...");
+                          (charType === 'quyen' ? "Cái chết là sự giải thoát trong im lặng." : 
+                          (charType === 'tuchill' ? "Nó ngủ hơi sâu rồi... bạn trồng lại cây mới nhé." : "Cây đã chết úng mất rồi wabo..."));
             let potPrefix = 'BrokenPot';
             if (currentPotImg.includes('NormalPot') || currentPotImg.includes('CoderPot')) potPrefix = 'NormalPot';
             if (currentPotImg.includes('GoldenPot')) potPrefix = 'GoldenPot';
@@ -746,7 +908,8 @@ function updateGardenVisuals() {
             } else {
                 if (centerPot) centerPot.classList.add('overwatered-plant');
                 currentLabel = charType === 'quan' ? "Cây sắp úng rồi, dừng hành động ngu ngốc lại!" : 
-                              (charType === 'quyen' ? "Đừng nhấn chìm nó thêm nữa." : "Wabo! Cây sắp bơi trong chậu rồi dừng tưới đi!");
+                              (charType === 'quyen' ? "Đừng nhấn chìm nó thêm nữa." : 
+                              (charType === 'tuchill' ? "Ngập nước rồi kìa bạn ơi, dừng tay lại chút." : "Wabo! Cây sắp bơi trong chậu rồi dừng tưới đi!"));
             }
         }
 
@@ -759,14 +922,17 @@ function updateGardenVisuals() {
             if (isWithered && progress < 100) {
                 if (centerPot) centerPot.classList.add('withered-plant');
                 currentLabel = charType === 'quan' ? "Thiếu H2O trầm trọng. Ngươi định để nó chết khát à?" : 
-                              (charType === 'quyen' ? "Cây đang khát. Cứu nó trước khi quá muộn." : "Cây đang héo kìa cậu tưới nước đi");
+                              (charType === 'quyen' ? "Cây đang khát. Cứu nó trước khi quá muộn." : 
+                              (charType === 'tuchill' ? "Khô rang rồi kìa, cứu bé nó một ly nước đi bạn." : "Cây đang héo kìa cậu tưới nước đi"));
             } else {
                 if (progress >= 100) {
                     currentLabel = charType === 'quan' ? "Cũng được đấy. Thu hoạch nhanh đi." : 
-                                  (charType === 'quyen' ? "Đến lúc chia tay. Thu hoạch đi." : "Hoa nở rồi cậu thu hoạch đi");
+                                  (charType === 'quyen' ? "Đến lúc chia tay. Thu hoạch đi." : 
+                                  (charType === 'tuchill' ? "Hoa nở đẹp quá, thu hoạch tận hưởng thành quả thôi." : "Hoa nở rồi cậu thu hoạch đi"));
                 } else {
                     currentLabel = charType === 'quan' ? "Ta đang giám sát ngươi chăm cây đấy." : 
-                                  (charType === 'quyen' ? "Ta vẫn đứng đây, lặng lẽ chờ hoa nở." : "Waby wabo! Nhớ chăm sóc cây mỗi ngày nhé!");
+                                  (charType === 'quyen' ? "Ta vẫn đứng đây, lặng lẽ chờ hoa nở." : 
+                                  (charType === 'tuchill' ? "Thong thả chăm cây, nhẹ nhàng ngắm hoa nhé." : "Waby wabo! Nhớ chăm sóc cây mỗi ngày nhé!"));
                 }
             }
         }
@@ -779,7 +945,8 @@ function updateGardenVisuals() {
     } else {
         if (potWrapper) potWrapper.classList.remove('is-planted');
         currentLabel = charType === 'quan' ? "Thùng rỗng kêu to, chậu không gieo hạt. Gieo đi!" : 
-                      (charType === 'quyen' ? "Khoảng trống. Đợi một hạt giống được gieo xuống." : "Cậu chọn hạt giống đi nào");
+                      (charType === 'quyen' ? "Khoảng trống. Đợi một hạt giống được gieo xuống." : 
+                      (charType === 'tuchill' ? "Chậu đang trống kìa, bạn gieo một hạt giống đi cho vui nhà vui cửa." : "Cậu chọn hạt giống đi nào"));
         userData.lastStageLabel = null;
     }
 
@@ -821,7 +988,8 @@ async function handleCheatGrowth() {
     }
     
     let cheatMsg = charType === 'quan' ? "Thao túng thời gian sao? Thú vị đấy, chăm sóc tiếp đi." : 
-                  (charType === 'quyen' ? "Bước nhảy vọt phi lý. Nhưng hoa vẫn sẽ nở." : "Tớ vừa dùng cỗ máy thời gian bằng chảo! Cây lại đói rồi!");
+                  (charType === 'quyen' ? "Bước nhảy vọt phi lý. Nhưng hoa vẫn sẽ nở." : 
+                  (charType === 'tuchill' ? "Wow, phép thuật à? Lớn nhanh quá." : "Tớ vừa dùng cỗ máy thời gian bằng chảo! Cây lại đói rồi!"));
     updateThanhSpeech(cheatMsg, "success");
 
     updateDoc(doc(db, "users", currentUser.uid), {
@@ -889,7 +1057,8 @@ if (potWrapper) {
                     renderInventoryUI();
                     
                     let harvestMsg = charType === 'quan' ? "Hừm, cũng thu hoạch được đấy. Tiếp tục làm culi cho ta đi." : 
-                                    (charType === 'quyen' ? "Một thành quả nhỏ bé giữa thế giới rộng lớn. Cất nó đi." : "Raaww! Thu hoạch thành công, cám ơn cậu nha!");
+                                    (charType === 'quyen' ? "Một thành quả nhỏ bé giữa thế giới rộng lớn. Cất nó đi." : 
+                                    (charType === 'tuchill' ? "Thu hoạch thôi! Việc tốt luôn bắt đầu từ những đóa hoa nhỏ." : "Raaww! Thu hoạch thành công, cám ơn cậu nha!"));
                     updateThanhSpeech(harvestMsg, "success");
 
                     setDoc(doc(db, "server", "stats"), {
@@ -985,9 +1154,22 @@ function renderInventoryUI() {
             </div>
         `;
     }
+    if (userData.inventory['c3'] > 0 || userData.equippedChar === 'c3') {
+        let isCharEquipped = userData.equippedChar === 'c3';
+        htmlPots += `
+            <div class="inv-item-card">
+                <img src="${ITEM_DB['c3'].img}" class="inv-item-img">
+                <div class="inv-item-name">${ITEM_DB['c3'].name}</div>
+                <div class="inv-item-qty">Sở hữu</div>
+                <button class="btn-use ${isCharEquipped ? 'btn-unequip' : ''}" onclick="useItem('c3', 'character', '${isCharEquipped ? 'unequip' : 'c3'}')">
+                    ${isCharEquipped ? 'GỠ BỎ' : 'TRANG BỊ'}
+                </button>
+            </div>
+        `;
+    }
 
     for (const [id, count] of Object.entries(userData.inventory)) {
-        if (!ITEM_DB[id] || !count || id === 'w1' || id === 'f1' || id === 'c1' || id === 'c2') continue;
+        if (!ITEM_DB[id] || !count || id === 'w1' || id === 'f1' || id === 'c1' || id === 'c2' || id === 'c3') continue;
         const item = ITEM_DB[id];
 
         let isEquipped = (item.type === 'pot' && userData.equippedPot === item.img) ||
@@ -1036,7 +1218,8 @@ window.useItem = async (id, type, actionPath) => {
         if (bagIcon) bagIcon.src = 'Img/bag_closed.png';
 
         let gieoHatMsg = charType === 'quan' ? "Cuối cùng ngươi cũng bắt đầu làm việc. Đừng để nó chết." : 
-                        (charType === 'quyen' ? "Một mầm sống cô độc bắt đầu từ đây." : "Waaaby wabo! Đã gieo hạt nhớ tưới nước thường xuyên nhé");
+                        (charType === 'quyen' ? "Một mầm sống cô độc bắt đầu từ đây." : 
+                        (charType === 'tuchill' ? "Gieo hạt rồi, giờ chỉ cần thong thả chờ đợi thôi." : "Waaaby wabo! Đã gieo hạt nhớ tưới nước thường xuyên nhé"));
         updateThanhSpeech(gieoHatMsg, 'success');
 
         userData.plantedSeed = ITEM_DB[id].img;

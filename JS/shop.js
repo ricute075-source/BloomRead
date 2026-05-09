@@ -15,18 +15,18 @@ const shopData = {
     pots: [
         { id: 'w1', name: 'Chai Nước', price: 5, img: 'Img/nuoc.png' },
         { id: 'p1', name: 'Chậu Thường', price: 50, img: 'Img/NormalPot.png' },
-        { id: 'p2', name: 'Chậu Vàng', price: 500, img: 'Img/GoldenPot.png' },
-        { id: 'p3', name: 'Chậu Của Coder', price: 0, img: 'Img/CoderPot.png' }
+        { id: 'p2', name: 'Chậu Vàng', price: 500, img: 'Img/GoldenPot.png' }
     ],
     bgs: [
-        { id: 'b1', name: 'Khu vườn ban mai', price: 200, img: 'Img/KhuVuonBanMai.jpg' },
+        { id: 'b1', name: 'Khu vườn ban mai', price: 0, img: 'Img/KhuVuonBanMai.jpg' }, 
         { id: 'b2', name: 'Rừng đêm huyền bí', price: 500, img: 'Img/Rung_Dem_Huyen_Bi.png' },
         { id: 'b3', name: 'Sói của Minh Quyền', price: 500, img: 'Img/SoiCuaMinhQuyen.png' },
-        { id: 'b4', name: 'Sự Phẫn Nộ Của Quân', price: 400, img: 'Img/Dr.Minh_Quan_Gian_Giu.jpg' } // Nền Ẩn MQGD
+        { id: 'b4', name: 'Sự Phẫn Nộ Của Quân', price: 400, img: 'Img/Dr.Minh_Quan_Gian_Giu.jpg' }
     ],
     events: [
         { id: 'c1', name: 'Dr.Minh Quân', price: 0, img: 'Img/DrMinhQuan.png' },
-        { id: 'c2', name: 'Quyền Cô Độc', price: 0, img: 'Img/MinhQuyen.png' }
+        { id: 'c2', name: 'Quyền Cô Độc', price: 0, img: 'Img/MinhQuyen.png' },
+        { id: 'c3', name: 'TuChillGuy', price: 0, img: 'Img/TuChillGuy.png' }
     ]
 };
 
@@ -70,14 +70,11 @@ function renderShopItems(containerId, items) {
         let btnHtml = '';
         let displayName = item.name;
         let displayPrice = item.price;
-
-        // Xử lý điều kiện ẩn cho Nền Sói của Minh Quyền
         if (item.id === 'b3' && !inventory['c2']) {
             displayName = "???";
             displayPrice = "???";
             btnHtml = `<button class="btn-buy" disabled>CẦN CHỦ NHÂN</button>`;
         } 
-        // Xử lý điều kiện ẩn cho Nền Dr Minh Quân Giận Dữ (MQGD)
         else if (item.id === 'b4' && !userData.MQGD) {
             displayName = "???";
             displayPrice = "???";
@@ -90,7 +87,6 @@ function renderShopItems(containerId, items) {
                 btnHtml = `<button class="btn-buy" onclick="buyItem('${item.id}', '${item.name}', ${item.price}, '${containerId}')">MUA (${ownedCount}/${MAX_WATER})</button>`;
             }
         } 
-        // Xử lý Hạt giống (mua nhiều lần, tối đa 2)
         else if (containerId === 'tab-seeds') {
             if (ownedCount >= 2) {
                 btnHtml = `<button class="btn-buy" disabled>TỐI ĐA (2/2)</button>`;
@@ -98,7 +94,6 @@ function renderShopItems(containerId, items) {
                 btnHtml = `<button class="btn-buy" onclick="buyItem('${item.id}', '${item.name}', ${item.price}, '${containerId}')">MUA (${ownedCount}/2)</button>`;
             }
         } 
-        // Xử lý các vật phẩm mua 1 lần (Chậu, Nền, Nhân vật)
         else {
             if (ownedCount === true || ownedCount >= 1) {
                 btnHtml = `<button class="btn-buy" disabled>ĐÃ SỞ HỮU</button>`;
@@ -135,8 +130,6 @@ window.buyItem = async (id, name, price, category) => {
 
     if (!userData.inventory) userData.inventory = {};
     const currentOwned = userData.inventory[id] || 0;
-    
-    // Bảo mật điều kiện mua
     if (id === 'b3' && !userData.inventory['c2']) {
         return showPopup("Bạn cần nhận Designer Minh Quyền trước khi mua nền này!");
     }
@@ -175,26 +168,26 @@ window.buyItem = async (id, name, price, category) => {
                            (category === 'tab-bgs' ? shopData.bgs : shopData.events));
     
     if (id === 'c2') {
-        renderShopItems('tab-bgs', shopData.bgs); // Cập nhật lại tab hình nền nếu vừa nhận Minh Quyền
+        renderShopItems('tab-bgs', shopData.bgs);
     }
     renderShopItems(category, currentTabItems);
 
-    // Popup thông báo
     if (category === 'tab-seeds' || id === 'w1') {
         showPopup(`Giao dịch thành công!\nBạn đã mua thêm 1 ${name}.`);
     } else {
-        if (id === 'p3') {
-            showPopup(`Từ Coder\nTrân trọng cảm ơn bạn đã đồng hành cùng dự án BloomRead!\n\nChiếc chậu độc quyền này là món quà nhỏ thay lời tri ân. Chúc bạn có những giờ phút đọc sách thật vui!`);
+        if (id === 'b1') { 
+            showPopup(`Từ Coder\nTrân trọng cảm ơn bạn đã đồng hành cùng dự án BloomRead!\n\nKhu vườn ban mai này là món quà nhỏ thay lời tri ân. Chúc bạn có những giờ phút đọc sách thật vui!`);
         } else if (id === 'c1') {
             showPopup(`Từ Tiến sĩ Minh Quân\n"Ta, Tiến sĩ Minh Quân, xin gửi lời ghi nhận đến tất cả các ngươi vì đã ủng hộ dự án BloomRead. Dù trí tuệ của các ngươi có lẽ sẽ không bao giờ sánh kịp ta, nhưng sự nỗ lực học hỏi này rất đáng khen ngợi. Nhớ chăm chỉ đọc sách và đừng làm héo những cái cây đó, ta sẽ luôn giám sát các ngươi!"`);
         } else if (id === 'c2') {
-            showPopup(`Từ Designer Minh Quyền\n"Cảm ơn bạn đã luôn ủng hộ BloomRead! Hy vọng những thiết kế của mình sẽ mang lại cho bạn một không gian đọc sách thật thư giãn và đầy cảm hứng. Hãy ghé qua cửa hàng Nền, mình có một bé sói đang đợi bạn đón về đấy!"`);
+            showPopup(`Từ Designer Minh Quyền\n"Cảm ơn bạn đã luôn ủng hộ BloomRead! Hy vọng những thiết kế của mình sẽ mang lại cho bạn một không gian đọc sách thật thư giãn và đầy cảm hứng. Hãy ghé qua cửa hàng Nền, mình có một bé sói đang đợi bạn đón về đấy!"`);   
+        } else if (id === 'c3') {
+            showPopup(`Từ Designer Tú\n"Chào người bạn đồng hành! Mình là Tú. Cảm ơn bạn đã ghé thăm BloomRead. Cuộc sống đôi khi rất hối hả, hy vọng góc nhỏ này giúp bạn tìm lại sự thảnh thơi. Cứ từ từ mà đọc, từ từ mà lớn nhé. Stay chill!"`);
         } else {
             showPopup(`Đã lưu [${name}] vào Kho Đồ của bạn!`);
         }
     } 
 
-    // Cập nhật lên Firebase
     let updateData = { readpoints: increment(-price) };
     if (category === 'tab-seeds') {
         updateData.seeds = increment(1); 
