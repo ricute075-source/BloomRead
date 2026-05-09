@@ -588,8 +588,6 @@ function initCareActions() {
                     let updatePayload = {
                         plantState: 'dead', inventory: userData.inventory
                     };
-
-                    // KIỂM TRA ĐIỀU KIỆN MỞ KHOÁ MQGD
                     if (charType === 'quan' && !userData.MQGD) {
                         userData.MQGD = true;
                         updatePayload.MQGD = true;
@@ -977,8 +975,6 @@ async function handleCheatGrowth() {
 
     updateGardenVisuals();
     renderInventoryUI();
-    
-    // GỌI VIDEO NGAY KHI BẤM NÚT "GIA TRƯỞNG" NẾU CÓ TRANG BỊ
     if (userData.equippedBg === 'Img/SoiCuaMinhQuyen.png') {
         const videoEl = document.getElementById('wolf-bg-video');
         if (videoEl) playBgVideo(videoEl, true, 'wolf');

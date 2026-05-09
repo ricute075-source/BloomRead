@@ -81,8 +81,11 @@ async function loadBooks(user = null) {
             const jsonData = await response.json();
             allBooks = [...(jsonData.recommended || []), ...(jsonData.featured || []), ...(jsonData.featured_poems || [])];
         }
-        let totalReads = allBooks.reduce((sum, book) => sum + (book.completed_reads || 0), 0);
-        let onlineCount = totalReads > 0 ? totalReads * 34 : Math.floor(Math.random() * 50) + 120;
+
+        // TÍNH LƯỢT ONLINE: Không liên quan lượt đọc
+        // Lấy số base ngẫu nhiên từ 15 đến 45 người, sau đó nhân 34
+        let baseOnlineCount = Math.floor(Math.random() * 31) + 15;
+        let onlineCount = baseOnlineCount * 34;
     
         const onlineEls = document.querySelectorAll('.online-count');
         onlineEls.forEach(el => el.textContent = `Online: ${onlineCount.toLocaleString('vi-VN')}`);
@@ -548,4 +551,3 @@ setTimeout(() => {
         loader.classList.add('hidden-loader');
     }
 }, 1500);
-
