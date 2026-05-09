@@ -405,7 +405,36 @@ async function saveProgressAndCalculatePoints(isExitClicked = false, redirectUrl
             }, { merge: true });
 
             if (isFinished && !isInvalidRead) {
-                await updateDoc(doc(db, "books", bookId), { completed_reads: increment(1) });
+                const getCurrentWeekID = () => {
+                    const d = new Date();
+                    d.setHours(0, 0, 0, 0);
+                    const day = d.getDay();
+                    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+                    const monday = new Date(d.setDate(diff));
+                    return monday.toISOString().split('T')[0];
+                };
+
+                const bookRef = doc(db, "books", bookId);
+                const bookSnap = await getDoc(bookRef);
+                const currentWeekId = getCurrentWeekID();
+                let updates = { completed_reads: increment(1) };
+                
+                if (bookSnap.exists()) {
+                    const bookData = bookSnap.data();
+                    if (bookData.week_id === currentWeekId) {
+                        updates.weekly_reads = increment(1);
+                    } 
+                 
+                    else {
+                        updates.weekly_reads = 1;
+                        updates.week_id = currentWeekId;
+                    }
+                } else {
+                    updates.weekly_reads = 1;
+                    updates.week_id = currentWeekId;
+                }
+                
+                await updateDoc(bookRef, updates);
             }
 
             if (readingMode !== 'focus' && !isSilent) {

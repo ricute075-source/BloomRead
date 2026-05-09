@@ -89,10 +89,27 @@ async function loadBooks(user = null) {
         
         if (document.getElementById('featured-container')) {
             const featuredContainer = document.getElementById('featured-container');
+            
+            // Hàm lấy ID tuần hiện tại
+            const getCurrentWeekID = () => {
+                const d = new Date();
+                d.setHours(0, 0, 0, 0);
+                const day = d.getDay();
+                const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+                const monday = new Date(d.setDate(diff));
+                return monday.toISOString().split('T')[0];
+            };
+            const currentWeekId = getCurrentWeekID();
             let featured = [...allBooks]
-                .filter(book => (book.completed_reads || 0) > 0)
-                .sort((a, b) => (b.completed_reads || 0) - (a.completed_reads || 0))
+                .filter(book => book.week_id === currentWeekId && (book.weekly_reads || 0) > 0)
+                .sort((a, b) => (b.weekly_reads || 0) - (a.weekly_reads || 0))
                 .slice(0, 5);
+            if (featured.length === 0) {
+                featured = [...allBooks]
+                    .filter(book => (book.completed_reads || 0) > 0)
+                    .sort((a, b) => (b.completed_reads || 0) - (a.completed_reads || 0))
+                    .slice(0, 5);
+            }
 
             if (featured.length === 0) {
                 featuredContainer.innerHTML = '<p style="text-align: center; width: 100%; color: #666; font-size: 18px; margin-top: 20px; font-weight: bold; letter-spacing: 1px;">TẠM THỜI ĐANG CẬP NHẬT</p>';
